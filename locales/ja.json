@@ -1,0 +1,270 @@
+{
+  "common": {
+    "backHome": "ホームへ戻る",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "confirmation": "確認",
+    "delete": "削除",
+    "edit": "編集",
+    "view": "表示",
+    "download": "ダウンロード",
+    "upload": "アップロード",
+    "import": "CSVインポート",
+    "confirmImportMsg": "{{fileName}} をインポートしてもよろしいですか？",
+    "select": "選択",
+    "add": "追加",
+    "remove": "削除",
+    "map": {
+      "direction": {
+        "label": "地図の方向"
+      }
+    },
+    "error": "エラー",
+    "success": "成功"
+  },
+  "admin": {
+    "drawer": {
+      "menu": {
+        "home": "ホーム",
+        "shift": "シフト・業務日誌",
+        "payslip": "給料明細・源泉徴収票",
+        "document": "雇用契約・資格など",
+        "profile": "個人情報",
+        "settings": "設定",
+        "notifications": "お知らせ",
+        "leaveRequests": "休日／有給申請",
+        "logout": "ログアウト"
+      }
+    },
+    "header": {
+      "notifications": {
+        "empty": {
+          "title": "通知リストが空です"
+        },
+        "seeAll": "すべての通知を見る"
+      }
+    }
+  },
+  "menu": {
+    "shiftReport": "業務日誌",
+    "calendarView": "カレンダー",
+    "listView": "リスト表示",
+    "dayOff": "休日／有給申請"
+  },
+  "shift": {
+    "defaultScreen": {
+      "title": "{{month.title}}",
+      "scheduleTitle": "本日のシフト"
+    },
+    "calendarScreen": {
+      "actions": {
+        "edit": "編集"
+      }
+    },
+    "shiftReport": {
+      "form": {
+        "actions": {
+          "submitReport": "記録を確認する"
+        },
+        "label": "実績登録",
+        "sections": {
+          "patient": "利用者名",
+          "serviceHours": "サービス提供時間",
+          "toilet": "【排泄介助】（はいせつかいじょ）",
+          "meal": "【食事介助】（しょくじかいじょ）",
+          "bath": "【入浴介助】（にゅうよくかいじょ）",
+          "grooming": "【身体整容】（しんたいせいよう）",
+          "positioning": "【移動の介助】（いどうのかいじょ）",
+          "medicationMedicalCare": "【服薬・医療的ケア】\n（ふくやく・いりょうてきけあ）",
+          "dailyLiving": "生活援助（せいかつえんじょ）",
+          "outgoingTransportation": "外出移動支援記録\n（がいしゅついどうしえんきろく）"
+        },
+        "toilet_assistance": {
+          "toilet": "トイレ介助（かいじょ）",
+          "diaper": "おむつ交換（こうかん）",
+          "linen": "リネン類の交換（こうかん）",
+          "urinal": "尿器（にょうき）の洗浄（せんじょう）"
+        },
+        "meal_assistance": {
+          "feeding": "摂食（せっしょく）の介助（かいじょ）",
+          "posture": "姿勢（しせい）の確保（かくほ）"
+        },
+        "meal_frequencies": {
+          "label": "何回",
+          "options": {
+            "alltime": "全部（ぜんぶ）",
+            "sometimes": "一部（いちぶ）"
+          }
+        },
+        "bath_assistance": {
+          "bath": "入浴介助（にゅうよくかいじょ）",
+          "shower": "シャワー浴介助（しゃわーよくかいじょ）",
+          "hairWash": "洗髪（せんぱつ）",
+          "handsArms": "手・腕（て・うで）",
+          "feetWash": "足（あし）",
+          "bedBath": "清拭（せいしき"
+        },
+        "bath_type": {
+          "label": "入浴種類（にゅうよくしゅるい）",
+          "options": {
+            "whole": "全身（ぜんしん）",
+            "part": "部分（ぶぶん）"
+          }
+        },
+        "grooming_assistance": {
+          "faceWash": "洗面（せんめん）",
+          "toothBrush": "口腔（こうくう）ケア",
+          "dressing": "更衣介助（こういかいじょ）",
+          "hairBrush": "髪（かみ）",
+          "mustacheShaving": "髭（ひげ）",
+          "nailCutting": "爪（つめ）",
+          "EarCleaning": "耳（みみ）",
+          "noseCleaning": "鼻（はな）",
+          "makeup": "化粧（けしょう）"
+        },
+        "positioning_assistance": {
+          "bodyPositioning": "体位変換（たいいへんかん）",
+          "gettingUpAssistance": "移乗介助（いじょうかいじょ）",
+          "goingSleepAssistance": "起床介助（きしょうかいじょ）",
+          "transferAssistance": "就寝介助（しゅうしんかいじょ）",
+          "goingOutAssistance": "外出の支援（がいしゅつのしえん）",
+          "readyGoingOutAssistance": "外出準備介助\n（がいしゅつじゅんびかいじょ）",
+          "receivingPatientAssistance": "帰宅受入介助\n（きたくうけいれかいじょ）",
+          "goingHospitalAssistance": "通院介助（つういんかいじょ）",
+          "shoppingAssistance": "買物介助（かいものかいじょ）"
+        },
+        "medication_assistance": {
+          "medicationAssistance": "服薬介助・確認\n（ふくやくかいじょ・かくにん）",
+          "medicationApplication": "薬の塗布（くすりのとふ）",
+          "eyedrops": "点眼（てんがん）",
+          "phlegmSuction": "痰の吸引（たんのきゅういん）",
+          "enema": "浣腸（かんちょう）",
+          "tubeFeeding": "経管栄養（けいかんえいよう）",
+          "watchPatient": "見守り（みまもり）"
+        },
+        "cleaning": {
+          "cleaning": "掃除（そうじ）",
+          "garbageDisposal": "ゴミ出し（ごみだし）",
+          "laundry": "洗濯（せんたく）",
+          "cooking": "調理（ちょうり）"
+        },
+        "transport_type": {
+          "label": "移動手段（いどうしゅだん）",
+          "options": {
+            "walk": "徒歩（とほ）",
+            "bus": "バス",
+            "train": "電車（でんしゃ）",
+            "car_taxi": "車（くるま）・タクシー",
+            "other": "その他）"
+          }
+        },
+        "support_hours": {
+          "label": "支援時間（しえんじかん）",
+          "options": {
+            "1": "30分",
+            "2": "1時間",
+            "3": "1時間30分",
+            "4": "2時間",
+            "5": "2時間30分",
+            "6": "3時間",
+            "7": "3時間30分",
+            "8": "4時間"
+          }
+        },
+        "outgoing_assistance": {
+          "actions": {
+            "addRecord": "記録を追加"
+          },
+          "transport_type": {
+            "label": "移動手段"
+          },
+          "destination": {
+            "label": "行き先"
+          },
+          "support_hours": {
+            "label": "支援時間"
+          }
+        }
+      },
+      "notifications": {
+        "addSuccessReport": "記録が保存されました",
+        "updateSuccessReport": "記録が更新されました",
+        "errorReport": "記録が保存されませんでした",
+        "existingReport": "記録が既に存在します"
+      }
+    }
+  },
+  "leaveRequest": {
+    "screen": {
+      "header": {
+        "date": "日付",
+        "type": "種類",
+        "status": "状況"
+      },
+      "row": {
+        "status": {
+          "pending": "保留中",
+          "approved": "承認",
+          "declined": "拒否"
+        },
+        "type": {
+          "paid": "有給",
+          "unpaid": "無給"
+        },
+        "from": "自",
+        "until": "至"
+      }
+    },
+    "form": {
+      "label": "休暇申請",
+      "note": "休暇の申請は一度に一つだけ提出できます。別の申請をする前に、承認をお待ちください。",
+      "leave_type": {
+        "label": "休暇種類",
+        "options": {
+          "paid": "有給する",
+          "unpaid": "有給しない"
+        }
+      },
+      "start_date": {
+        "label": "開始日"
+      },
+      "end_date": {
+        "label": "終了日"
+      },
+      "details": {
+        "label": "詳細",
+        "placeholder": "理由を入力してください"
+      }
+    },
+    "notifications": {
+      "addSuccessLeaveRequest": "休日／有給申請が提出されました",
+      "errorLeaveRequest": "休日／有給申請が提出されませんでした",
+      "existingLeaveRequest": "休日／有給申請が既に存在します"
+    }
+  },
+  "settings": {
+    "links": {
+      "account": "アカウント",
+      "general": "一般",
+      "help": "ヘルプ",
+      "notifications": "通知"
+    },
+    "generalSettings": {
+      "headers": {
+        "language": "言語",
+        "mode": "モード"
+      },
+      "options": {
+        "language": {
+          "english": "英語",
+          "japanese": "日本語"
+        },
+        "mode": {
+          "light": "ライト",
+          "dark": "ダーク",
+          "auto": "自動"
+        }
+      }
+    }
+  }
+}

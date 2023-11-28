@@ -1,0 +1,1 @@
+export const timeZone = "Asia/Tokyo"; // Japan's timezone

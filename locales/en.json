@@ -1,0 +1,264 @@
+{
+  "common": {
+    "backHome": "Back to Home",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "confirmation": "Confirmation",
+    "delete": "Delete",
+    "view": "View",
+    "edit": "Edit",
+    "download": "Download File",
+    "upload": "Upload File",
+    "import": "Import File",
+    "confirmImportMsg": "Do you want to import {{fileName}}?",
+    "select": "Select File",
+    "add": "Add",
+    "remove": "Remove",
+    "map": {
+      "direction": {
+        "label": "Map Directions"
+      }
+    },
+    "error": "Error",
+    "success": "Success"
+  },
+  "menu": {
+    "shiftReport": "Show Shift Report",
+    "calendarView": "Calendar View",
+    "listView": "List View",
+    "dayOff": "Request Paid/Unpaid Leave"
+  },
+  "admin": {
+    "drawer": {
+      "menu": {
+        "home": "Home",
+        "shift": "Shift Schedule",
+        "payslip": "Payslip",
+        "document": "Documents",
+        "profile": "Profile",
+        "logout": "Logout",
+        "settings": "Settings",
+        "notifications": "Notifications",
+        "leaveRequests": "Leave Requests"
+      }
+    },
+    "header": {
+      "notifications": {
+        "empty": {
+          "title": "Your notification list is empty"
+        },
+        "seeAll": "See all notifications"
+      }
+    }
+  },
+  "shift": {
+    "defaultScreen": {
+      "title": "{{month.title}}",
+      "scheduleTitle": "Today's Schedule"
+    },
+    "calendarScreen": {
+      "actions": {
+        "edit": "Edit"
+      }
+    },
+    "shiftReport": {
+      "form": {
+        "actions": {
+          "submitReport": "Submit Report"
+        },
+        "label": "Shift Report",
+        "sections": {
+          "patient": "Patient",
+          "serviceHours": "Service Hours",
+          "toilet": "Toilet Assistance",
+          "meal": "Meal Assistance",
+          "bath": "Bath Assistance",
+          "grooming": "Grooming Assistance",
+          "positioning": "Positioning Assistance",
+          "medicationMedicalCare": "Medication/Medical Assistance",
+          "dailyLiving": "Daily Living Assistance",
+          "outgoingTransportation": "Outgoing Transport Assistance"
+        },
+        "toilet_assistance": {
+          "toilet": "Toilet",
+          "diaper": "Diaper Change",
+          "linen": "Linen Change",
+          "urinal": "Urinal Flushing"
+        },
+        "meal_assistance": {
+          "feeding": "Assistance with Feeding",
+          "posture": "Assistance in Ensuring Posture"
+        },
+        "meal_frequencies": {
+          "label": "How many times",
+          "options": {
+            "alltime": "All the time",
+            "sometimes": "Sometimes"
+          }
+        },
+        "bath_assistance": {
+          "bath": "Bath",
+          "shower": "Shower",
+          "hairWash": "Hair Wash",
+          "handsArms": "Hands/Arms Wash",
+          "feetWash": "Feet Wash",
+          "bedBath": "Bed Bath"
+        },
+        "bath_type": {
+          "label": "Bath Type",
+          "options": {
+            "whole": "Whole Body",
+            "part": "Some Parts"
+          }
+        },
+        "grooming_assistance": {
+          "faceWash": "Face Wash",
+          "toothBrush": "Tooth Brush",
+          "dressing": "Dressing",
+          "hairBrush": "Hair Brush",
+          "mustacheShaving": "Mustache Shaving",
+          "nailCutting": "Nail Cutting",
+          "EarCleaning": "Ear Cleaning",
+          "noseCleaning": "Nose Cleaning",
+          "makeup": "Apply Makeup"
+        },
+        "positioning_assistance": {
+          "bodyPositioning": "Change Body Position",
+          "gettingUpAssistance": "Assistance in Getting Up",
+          "goingSleepAssistance": "Assistance in getting Patient to sleep",
+          "transferAssistance": "Assistance in Transfer",
+          "goingOutAssistance": "Assistance when Going Out",
+          "readyGoingOutAssistance": "Assistance in preparing to go out",
+          "receivingPatientAssistance": "Assistance in receiving patient home",
+          "goingHospitalAssistance": "Assistance in going to hospital",
+          "shoppingAssistance": "Assistance in shopping"
+        },
+        "medication_assistance": {
+          "medicationAssistance": "Medication Assistance ",
+          "medicationApplication": "Applying Medication ",
+          "eyedrops": "Eye Drops",
+          "phlegmSuction": "Phlegm Suctioning",
+          "enema": "Performing Enema",
+          "tubeFeeding": "Tube Feeding",
+          "watchPatient": "Looking/Watching after patient"
+        },
+        "cleaning": {
+          "cleaning": "Cleaning",
+          "garbageDisposal": "Garbage Disposal",
+          "laundry": "Laundry",
+          "cooking": "Cooking"
+        },
+        "transport_type": {
+          "label": "Transport Type",
+          "options": {
+            "walk": "Walk",
+            "bus": "Bus",
+            "train": "Train",
+            "car_taxi": "Car/Taxi",
+            "other": "Other"
+          }
+        },
+        "support_hours": {
+          "label": "Support Hours",
+          "options": {
+            "1": "0.5 Hour(s)",
+            "2": "1 Hour(s)",
+            "3": "1.5 Hour(s)",
+            "4": "2 Hour(s)",
+            "5": "2.5 Hour(s)",
+            "6": "3 Hour(s)",
+            "7": "3.5 Hour(s)",
+            "8": "4 Hour(s)"
+          }
+        },
+        "outgoing_assistance": {
+          "actions": {
+            "addRecord": "Add Record"
+          },
+          "destination": {
+            "label": "Destination"
+          }
+        }
+      },
+      "notifications": {
+        "addSuccessReport": "Report has been saved.",
+        "updateSuccessReport": "Report has been saved.",
+        "errorReport": "Report was not saved. Contact Administrator.",
+        "existingReport": "Report already exists for this shift."
+      }
+    }
+  },
+  "leaveRequest": {
+    "screen": {
+      "header": {
+        "date": "Date",
+        "type": "Type",
+        "status": "Status"
+      },
+      "row": {
+        "status": {
+          "pending": "Pending",
+          "approved": "Approved",
+          "declined": "Declined"
+        },
+        "type": {
+          "paid": "Paid",
+          "unpaid": "Unpaid"
+        },
+        "from": "From",
+        "until": "Until"
+      }
+    },
+    "form": {
+      "label": "Request Paid/Unpaid Leave",
+      "note": "You can only submit a leave request one at a time. Please wait for the approval before submitting another request.",
+      "leave_type": {
+        "label": "Leave Type",
+        "options": {
+          "paid": "Paid",
+          "unpaid": "Unpaid"
+        }
+      },
+      "start_date": {
+        "label": "Start Date"
+      },
+      "end_date": {
+        "label": "End Date"
+      },
+      "details": {
+        "label": "Details",
+        "placeholder": "Reason etc."
+      }
+    },
+    "notifications": {
+      "addSuccessLeaveRequest": "Your Leave Request has been submitted.",
+      "errorLeaveRequest": "Leave Request was not submitted. Contact Administrator.",
+      "existingLeaveRequest": "You already have a pending leave request."
+    }
+  },
+  "settings": {
+    "links": {
+      "account": "Account",
+      "general": "General",
+      "help": "Help",
+      "notifications": "Notifications"
+    },
+    "generalSettings": {
+      "headers": {
+        "language": "Language",
+        "mode": "Mode"
+      },
+      "options": {
+        "language": {
+          "english": "English",
+          "japanese": "Japanese"
+        },
+        "mode": {
+          "light": "Light",
+          "dark": "Dark",
+          "auto": "Auto"
+        }
+      }
+    }
+  }
+}
