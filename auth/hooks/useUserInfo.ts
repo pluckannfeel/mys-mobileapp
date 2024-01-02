@@ -17,5 +17,6 @@ export function useUserInfo(key?: string) {
   return useQuery(["user-info", key], () => fetchUserInfo(key), {
     enabled: !!key,
     // staleTime: 0,
+    suspense: true,
   });
 }

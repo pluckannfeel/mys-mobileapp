@@ -5,8 +5,12 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ActivityIndicator,
 } from "react-native";
-import { Formik, Field } from "formik";
+import { Formik, Field, useFormik } from "formik";
 import * as Yup from "yup";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useLayoutEffect } from "react";
@@ -17,6 +21,14 @@ import { useTheme } from "../../core/contexts/ThemeProvider";
 import { UserInfo } from "../../auth/types/userInfo";
 import { HEIGHT } from "../../core/constants/dimensions";
 import { useTranslation } from "react-i18next";
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
+import { Profile } from "../types/profile";
+import Profileform from "../components/Profileform";
+import { useUpdateProfile } from "../hooks/useUpdateProfile";
+import Toast from "react-native-toast-message";
 
 const UserProfileSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -25,13 +37,17 @@ const UserProfileSchema = Yup.object().shape({
 });
 
 type ProfileScreenProps = {
-  userInfo: UserInfo;
+  userInfo: Profile;
 };
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ userInfo }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<AppNavigationProp>();
   const theme = useTheme();
+
+  // hook
+  const { isUpdating, updateProfile } = useUpdateProfile();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       // title: t("admin.drawer.menu.profile"),
@@ -62,116 +78,62 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ userInfo }) => {
     });
   }, [navigation]);
 
-  return (
-    <Formik
-      initialValues={userInfo}
-      validationSchema={UserProfileSchema}
-      onSubmit={(values) => {
-        console.log(values);
-        // Handle form submission
+  const saveProfileHandler = (values: Profile) => {
+    // console.log(values);
+    updateProfile(values)
+      .then((data) => {
+        Toast.show({
+          type: "success",
+          text1: t("common.success"),
+          text2: t("profile.notifications.updateSuccess"),
+          visibilityTime: 4000,
+          topOffset: 60,
+        });
+      })
+      .catch((error) => {
+        // const detail = error.response.data.detail;
+        // if (detail === "pending_leave_request") {
+        //   Toast.show({
+        //     type: "error",
+        //     text1: t("common.error"),
+        //     text2: t("leaveRequest.notifications.existingLeaveRequest"),
+        //     visibilityTime: 8000,
+        //     topOffset: 60,
+        //   });
+        // } else {
+
+        // }
+
+        Toast.show({
+          type: "error",
+          text1: t("common.error"),
+          text2: t("profile.notifications.updateFailed"),
+          visibilityTime: 3000,
+          topOffset: 60,
+        });
+      });
+  };
+
+  // console.log(userInfo)
+
+  return isUpdating ? (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        // backgroundColor: theme.colors.secondary,
       }}
     >
-      {({
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-        errors,
-        touched,
-      }) => (
-        <View style={styles.container}>
-          {/* Profile Image */}
-          <Image
-            // source={{ uri: initialValues.img_url }}
-            source={{ uri: userInfo.img_url }}
-            style={styles.profileImage}
-          />
-          <Text style={styles.name}>{userInfo.english_name}</Text>
-          <Text style={styles.role}>{userInfo.role}</Text>
-
-          {/* Email Field */}
-          <View style={styles.inputContainer}>
-            <Field
-              as={TextInput}
-              name="email"
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              value={values.email}
-              placeholder="Email address"
-              style={styles.input}
-            />
-            <Ionicons name="mail-outline" size={24} color="#f43f5e" />
-            {touched.email && errors.email && (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            )}
-          </View>
-
-          {/* ... other fields ... */}
-
-          {/* Submit Button */}
-          <TouchableOpacity onPress={handleSubmit as any} style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </Formik>
+      <ActivityIndicator size="large" color={theme.colors.primary} />
+    </View>
+  ) : (
+    <Profileform saveProfile={saveProfileHandler} profileData={userInfo} />
   );
 };
 
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // backgroundColor: '#fff',
-    marginTop: HEIGHT / 10,
-    padding: 20,
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    alignSelf: "center",
-    marginTop: 50,
-    marginBottom: 10,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#000",
-  },
-  role: {
-    fontSize: 18,
-    textAlign: "center",
-    color: "#666",
-    marginBottom: 20,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    paddingBottom: 10,
-    marginBottom: 20,
-    alignItems: "center",
-  },
-  input: {
-    flex: 1,
-    marginRight: 10,
-  },
-  errorText: {
-    fontSize: 12,
-    color: "red",
-  },
-  button: {
-    backgroundColor: "#f43f5e",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
   // ... add styles for other components as needed ...
 });

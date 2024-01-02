@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useMemo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import {
   DrawerContentScrollView,
@@ -17,13 +17,14 @@ import { useNavigation, StackActions } from "@react-navigation/native";
 import { AppNavigationProp } from "../../AppScreens";
 import PayslipScreen from "../../Payslip/screens/Payslip";
 import DocumentScreen from "../../Document/screens/Document";
-import ProfileScreen from "../../Profile/Screens/Profile";
+import ProfileScreen from "../../Profile/screens/Profile";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { height } from "../../core/constants/dimensions";
 import { useTheme } from "../../core/contexts/ThemeProvider";
 import { useTranslation } from "react-i18next";
 import LeaveRequestsScreen from "../../Shift/screens/LeaveRequests";
 import LeaveRequestBottomSheet from "../../Shift/Components/LeaveRequestBottomSheet";
+import { Profile } from "../../Profile/types/profile";
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { userInfo, logout } = useAuth();
@@ -35,7 +36,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     <DrawerContentScrollView
       {...props}
       style={styles.drawerContent}
-      contentContainerStyle={{ paddingBottom: height * 0.5 }}
+      contentContainerStyle={{ paddingBottom: height * 0.43 }}
     >
       <View style={styles.userInfoSection}>
         <View style={styles.userRow}>
@@ -99,10 +100,6 @@ const MainScreen = () => {
   const theme = useTheme();
   const { t } = useTranslation();
 
-  function HomeScreenWrapper() {
-    return <HomeScreen userInfo={userInfo!} />;
-  }
-
   useLayoutEffect(() => {
     // Set the navigation header title
     navigation.setOptions({
@@ -111,8 +108,12 @@ const MainScreen = () => {
     });
   }, [navigation]);
 
+  const HomeScreenWrapper = () => {
+    return <HomeScreen userInfo={userInfo as UserInfo} />;
+  };
+
   const ProfileScreenWrapper = () => {
-    return <ProfileScreen userInfo={userInfo as UserInfo} />;
+    return <ProfileScreen userInfo={{ ...userInfo } as Profile} />;
   };
 
   const ShiftScreenWrapper = () => {
@@ -123,6 +124,10 @@ const MainScreen = () => {
     return <LeaveRequestsScreen userInfo={userInfo as UserInfo} />;
   };
 
+  const PayslipScreenWrapper = () => {
+    return <PayslipScreen userInfo={userInfo as UserInfo} />;
+  };
+
   return (
     <Drawer.Navigator
       screenOptions={{ headerTintColor: theme.colors.pink400 }}
@@ -131,7 +136,7 @@ const MainScreen = () => {
     >
       <Drawer.Screen
         name="Home"
-        component={HomeScreenWrapper}
+        component={React.memo(HomeScreenWrapper)}
         options={{
           drawerLabel: t("admin.drawer.menu.home"),
           headerRight: () => (
@@ -147,7 +152,7 @@ const MainScreen = () => {
                 color={theme.colors.pink400}
                 style={{ marginRight: 15 }}
                 onPress={() => {
-                  navigation.navigate("Notifications")
+                  navigation.navigate("Notifications");
                 }}
               />
             </View>
@@ -156,12 +161,12 @@ const MainScreen = () => {
       />
       <Drawer.Screen
         name="Shift"
-        component={ShiftScreenWrapper}
+        component={React.memo(ShiftScreenWrapper)}
         options={{ drawerLabel: t("admin.drawer.menu.shift") }}
       />
       <Drawer.Screen
         name="LeaveRequests"
-        component={LeaveRequestScreenWrapper}
+        component={React.memo(LeaveRequestScreenWrapper)}
         options={{
           drawerLabel: t("admin.drawer.menu.leaveRequests"),
           headerTitle: t("admin.drawer.menu.leaveRequests"),
@@ -169,17 +174,17 @@ const MainScreen = () => {
       />
       <Drawer.Screen
         name="Payslip"
-        component={PayslipScreen}
+        component={React.memo(PayslipScreenWrapper)}
         options={{ drawerLabel: t("admin.drawer.menu.payslip") }}
       />
       <Drawer.Screen
         name="Document"
-        component={DocumentScreen}
+        component={React.memo(DocumentScreen)}
         options={{ drawerLabel: t("admin.drawer.menu.document") }}
       />
       <Drawer.Screen
         name="Profile"
-        component={ProfileScreenWrapper}
+        component={React.memo(ProfileScreenWrapper)}
         options={{ drawerLabel: t("admin.drawer.menu.profile") }}
       />
       {/* Add other screens here as needed */}

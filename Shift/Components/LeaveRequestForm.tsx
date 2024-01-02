@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,13 +8,18 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { LeaveRequest } from "../types/LeaveRequest";
 import { theme } from "../../core/theme/theme";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ReportRadioGroup from "./ReportRadioButton";
 import { leave_types } from "../helpers/pickerOptions";
@@ -29,6 +34,12 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
   leaveRequestData,
 }) => {
   const { t, i18n } = useTranslation();
+  const [isStartDatePickerVisible, setStartDatePickerVisible] =
+    useState<boolean>(false);
+  const [isEndDatePickerVisible, setEndDatePickerVisible] =
+    useState<boolean>(false);
+  // const [startDate, setStartDate] = useState(new Date());
+  // const [endDate, setEndDate] = useState(new Date());
 
   const currLanguage = i18n.language;
 
@@ -38,103 +49,139 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
     end_date: new Date(),
   };
 
+  const validationSchema = Yup.object().shape({
+    start_date: Yup.date()
+      .required(t("leaveRequest.form.error.required"))
+      .max(Yup.ref("end_date"), ({ max }) =>
+        t("leaveRequest.form.error.invalidDate")
+      ),
+    end_date: Yup.date()
+      .required("End date is required")
+      .min(Yup.ref("start_date"), ({ min }) =>
+        t("leaveRequest.form.error.invalidDate")
+      ),
+    // ... other field validations
+  });
+
   const formik = useFormik({
     initialValues,
-    // validationSchema,
+    validationSchema,
     // onSubmit,
     onSubmit: (values) => {
       submitForm(values as LeaveRequest);
       // console.log(values)
     },
   });
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <View
-        style={styles.container}
-        // contentContainerStyle={{ paddingBottom: 160 }}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
       >
-        <Text style={styles.note}>{t("leaveRequest.form.note")}</Text>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{ paddingBottom: 160 }}
+        >
+          <Text style={styles.note}>{t("leaveRequest.form.note")}</Text>
 
-        {/* meal frequency */}
-        <ReportRadioGroup
-          name="leave_type" // replace with the name of your field
-          options={leave_types}
-          formik={formik}
-          headerLabel={t("leaveRequest.form.leave_type.label")}
-        />
-
-        <View style={styles.dateFieldContainer}>
-          <Text style={styles.dateFieldLabel}>{`${t(
-            "leaveRequest.form.start_date.label"
-          )} :`}</Text>
-          <DateTimePicker
-            display="default"
-            mode="date"
-            value={formik.values.start_date}
-            onChange={(event, selectedDate) => {
-              formik.setFieldValue("start_date", selectedDate);
-            }}
-            locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
-            style={styles.dateFieldInput}
+          {/* meal frequency */}
+          <ReportRadioGroup
+            name="leave_type" // replace with the name of your field
+            options={leave_types}
+            formik={formik}
+            headerLabel={t("leaveRequest.form.leave_type.label")}
           />
-        </View>
 
-        <View style={styles.dateFieldContainer}>
-          <Text style={styles.dateFieldLabel}>{`${t(
-            "leaveRequest.form.end_date.label"
-          )} :`}</Text>
-          <DateTimePicker
-            display="default"
-            mode="date"
-            locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
-            value={formik.values.end_date} // Make sure 'end_date' is part of your form's initial values
-            onChange={(event, selectedDate) => {
-              formik.setFieldValue("end_date", selectedDate);
-            }}
-            style={styles.dateFieldInput}
-          />
-        </View>
+          <View style={styles.dateFieldContainer}>
+            <Text style={styles.dateFieldLabel}>{`${t(
+              "leaveRequest.form.start_date.label"
+            )} :`}</Text>
+            <DateTimePicker
+              display="default"
+              mode="date"
+              value={formik.values.start_date}
+              onChange={(event, selectedDate) => {
+                setStartDatePickerVisible(Platform.OS === "ios");
+                formik.setFieldValue(
+                  "start_date",
+                  selectedDate || formik.values.start_date
+                );
+              }}
+              locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
+              style={styles.dateFieldInput}
+            />
+          </View>
 
-        <View style={styles.dividerContainer}>
-          <View style={styles.sectionHeader}>
-            {/* <MaterialCommunityIcons
+          {formik.touched.start_date && formik.errors.start_date && (
+            <Text style={styles.errorText}>
+              {formik.errors.start_date as string}
+            </Text>
+          )}
+
+          <View style={styles.dateFieldContainer}>
+            <Text style={styles.dateFieldLabel}>{`${t(
+              "leaveRequest.form.end_date.label"
+            )} :`}</Text>
+            <DateTimePicker
+              display="default"
+              mode="date"
+              locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
+              value={formik.values.end_date} // Make sure 'end_date' is part of your form's initial values
+              onChange={(event, selectedDate) => {
+                setEndDatePickerVisible(Platform.OS === "ios");
+                formik.setFieldValue(
+                  "end_date",
+                  selectedDate || formik.values.end_date
+                );
+              }}
+              style={styles.dateFieldInput}
+            />
+          </View>
+          {formik.touched.end_date && formik.errors.end_date && (
+            <Text style={styles.errorText}>
+              {formik.errors.end_date as string}
+            </Text>
+          )}
+
+          <View style={styles.dividerContainer}>
+            <View style={styles.sectionHeader}>
+              {/* <MaterialCommunityIcons
               name="account"
               size={24}
               color={theme.colors.pink400}
             /> */}
-            <Text style={styles.header}>
-              {t("leaveRequest.form.details.label")}
-            </Text>
+              <Text style={styles.header}>
+                {t("leaveRequest.form.details.label")}
+              </Text>
+            </View>
+            <TextInput
+              numberOfLines={4}
+              multiline
+              placeholder={t("leaveRequest.form.details.placeholder")}
+              style={[styles.dividerInput, { maxHeight: 120 }]}
+              onChangeText={formik.handleChange("details")}
+              onBlur={formik.handleBlur("details")}
+              value={formik.values.details}
+            />
           </View>
-          <TextInput
-            numberOfLines={4}
-            multiline
-            placeholder={t("leaveRequest.form.details.placeholder")}
-            style={[styles.dividerInput, { maxHeight: 120 }]}
-            onChangeText={formik.handleChange("details")}
-            onBlur={formik.handleBlur("details")}
-            value={formik.values.details}
-          />
-        </View>
 
-        <TouchableOpacity
-          style={
-            !formik.dirty && !formik.isSubmitting
-              ? styles.disabledButton
-              : styles.submitButton
-          }
-          onPress={() => formik.handleSubmit()}
-          disabled={!formik.dirty && !formik.isSubmitting}
-        >
-          <Text style={styles.submitButtonText}>
-            {t("shift.shiftReport.form.actions.submitReport")}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+          <TouchableOpacity
+            style={
+              !formik.dirty && !formik.isSubmitting
+                ? styles.disabledButton
+                : styles.submitButton
+            }
+            onPress={() => formik.handleSubmit()}
+            disabled={!formik.dirty && !formik.isSubmitting}
+          >
+            <Text style={styles.submitButtonText}>
+              {t("shift.shiftReport.form.actions.submitReport")}
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 export default LeaveRequestForm;
@@ -193,6 +240,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   errorText: {
+    paddingHorizontal: 20,
     color: "red",
     fontSize: 14,
   },

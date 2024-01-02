@@ -20,7 +20,37 @@
       }
     },
     "error": "エラー",
-    "success": "成功"
+    "serverError": "エラー, 管理者を連絡して下さい。",
+    "success": "成功",
+    "permissionDenied": "権限がありません"
+  },
+  "in_progress": {
+    "title": "開発中"
+  },
+  "auth": {
+    "login": {
+      "title": "ログイン",
+      "form": {
+        "mysId": {
+          "label": "MYS ID",
+          "placeholder": "MYS ID を入力してください"
+        },
+        "password": {
+          "label": "パスワード",
+          "placeholder": "パスワードを入力してください"
+        },
+        "actions": {
+          "login": "ログイン",
+          "forgotPassword": "パスワードを忘れた場合"
+        }
+      },
+      "toast": {
+        "success": "ログインに成功しました",
+        "error": "ログインに失敗しました",
+        "invalidCredentials": "MYS ID またはパスワードが正しくありません",
+        "serverError": "管理者を連絡して下さい。"
+      }
+    }
   },
   "admin": {
     "drawer": {
@@ -234,12 +264,59 @@
       "details": {
         "label": "詳細",
         "placeholder": "理由を入力してください"
+      },
+      "error": {
+        "required": "必須項目です",
+        "invalidDate": "開始日は終了日より前に設定してください"
       }
     },
     "notifications": {
       "addSuccessLeaveRequest": "休日／有給申請が提出されました",
       "errorLeaveRequest": "休日／有給申請が提出されませんでした",
-      "existingLeaveRequest": "休日／有給申請が既に存在します"
+      "existingLeaveRequest": "休日／有給申請が既に存在します",
+      "updateLeaveRequest": "休日／有給申請が",
+      "approved": "承認されました。",
+      "declined": "拒否されました。"
+    }
+  },
+  "payslip": {
+    "title": "給料明細・源泉徴収票",
+    "filter": {
+      "filterByYear": "フィルター"
+    },
+    "item": {
+      "netSalary": "手取り",
+      "totalDeduction": "控除額",
+      "totalHoursWorked": "総労働時間"
+    }
+  },
+  "profile": {
+    "form": {
+      "avatar": {
+        "label": "画像",
+        "actions": {
+          "label": "画像をアップロード",
+          "takePhoto": "写真を撮る",
+          "selectFromGallery": "ギャラリーから選択",
+          "view": "表示"
+        }
+      },
+      "japanese_name": {
+        "label": "氏名（カナ）"
+      },
+      "nickname": {
+        "label": "ニックネーム"
+      },
+      "phone_number": {
+        "label": "電話番号"
+      },
+      "email": {
+        "label": "メールアドレス"
+      }
+    },
+    "notifications": {
+      "updateSuccess": "プロフィールが更新されました",
+      "updateFailed": "プロフィールが更新されませんでした"
     }
   },
   "settings": {
@@ -265,6 +342,12 @@
           "auto": "自動"
         }
       }
+    }
+  },
+  "news": {
+    "title": "お知らせ",
+    "view": {
+      "empty": "お知らせがありません"
     }
   }
 }

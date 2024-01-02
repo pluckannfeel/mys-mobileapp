@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useCallback, useLayoutEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,7 @@ import {
   FlatList,
   SafeAreaView,
   TextStyle,
+  RefreshControl,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { format } from "date-fns";
@@ -21,6 +22,7 @@ import LeaveRequestBottomSheet from "../Components/LeaveRequestBottomSheet";
 import { useStaffLeaveRequests } from "../hooks/useStaffLeaveRequests";
 import { UserInfo } from "../../auth/types/userInfo";
 import Loader from "../../core/Components/Loader";
+import { ScrollView } from "react-native-gesture-handler";
 
 export interface LeaveRequest {
   id: string;
@@ -65,11 +67,29 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<AppNavigationProp>();
   const headerHeight = useHeaderHeight();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   // data
-  const { isLoading, data: leaveRequests } = useStaffLeaveRequests(
-    userInfo.staff_code
-  );
+  const {
+    isLoading,
+    data: leaveRequests,
+    refetch: refetchLeaveRequests,
+  } = useStaffLeaveRequests(userInfo.staff_code);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // Add your data fetching logic here.
+      await refetchLeaveRequests();
+    } catch (error) {
+      console.error("Error refreshing notifications", error);
+    } finally {
+      // Wait for 3 seconds before setting refreshing to false
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+    }
+  }, [refetchLeaveRequests]);
 
   // bottom sheet shift report form
   const [
@@ -82,8 +102,8 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
     // if (!isLoading) {
     navigation.setOptions(
       {
-        // title: t("admin.drawer.menu.shift"),
-        // headerTitle: ShiftHeaderTitle,
+        // title: t("admin.drawer.menu.leaveRequests"),
+        headerTitle: t("admin.drawer.menu.leaveRequests"),
         headerTransparent: true,
         // headerTintColor: "#fff",
         // headerTitleAlign: "left",
@@ -219,19 +239,25 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
         style={[styles.container, { marginTop: headerHeight + 10 }]}
       >
         <StatusBar style="auto" />
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View style={styles.requestHeader}>
+            <Text style={styles.dateColumnHeader}>
+              {t("leaveRequest.screen.header.date")}
+            </Text>
+            <Text style={styles.dateColumnHeader}>
+              {t("leaveRequest.screen.header.type")}
+            </Text>
+            <Text style={styles.dateColumnHeader}>
+              {t("leaveRequest.screen.header.status")}
+            </Text>
+          </View>
 
-        <View style={styles.requestHeader}>
-          <Text style={styles.dateColumnHeader}>
-            {t("leaveRequest.screen.header.date")}
-          </Text>
-          <Text style={styles.dateColumnHeader}>
-            {t("leaveRequest.screen.header.type")}
-          </Text>
-          <Text style={styles.dateColumnHeader}>
-            {t("leaveRequest.screen.header.status")}
-          </Text>
-        </View>
-        {renderGroupedItems()}
+          {renderGroupedItems()}
+        </ScrollView>
 
         {/* <FlatList
       data={leaveRequests as LeaveRequest[]}

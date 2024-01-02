@@ -8,6 +8,7 @@ export const theme = {
     pink300: "#fda4af", //roses color
     pink400: "#fb7185",
     pink500: "#f43f5e",
+    green300: "#71CD47"
   },
   fontSize: {
     small: 12,

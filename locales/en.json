@@ -20,13 +20,43 @@
       }
     },
     "error": "Error",
-    "success": "Success"
+    "serverError": "Server Error, Contact Administrator.",
+    "success": "Success",
+    "permissionDenied": "Permission Denied"
+  },
+  "in_progress": {
+    "title": "Under Development"
   },
   "menu": {
     "shiftReport": "Show Shift Report",
     "calendarView": "Calendar View",
     "listView": "List View",
     "dayOff": "Request Paid/Unpaid Leave"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "form": {
+        "mysId": {
+          "label": "MYS ID",
+          "placeholder": "Please enter your MYS ID"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Please enter your password"
+        },
+        "actions": {
+          "login": "Sign In",
+          "forgotPassword": "Forgot your Password?"
+        }
+      },
+      "toast": {
+        "success": "Success",
+        "error": "Error",
+        "invalidCredentials": "Your MYS ID or Password is incorrect. Please try again.",
+        "serverError": "Error, Please contact Administrator."
+      }
+    }
   },
   "admin": {
     "drawer": {
@@ -228,12 +258,59 @@
       "details": {
         "label": "Details",
         "placeholder": "Reason etc."
+      },
+      "error": {
+        "required": "This field is required",
+        "invalidDate": "Invalid Date"
       }
     },
     "notifications": {
       "addSuccessLeaveRequest": "Your Leave Request has been submitted.",
       "errorLeaveRequest": "Leave Request was not submitted. Contact Administrator.",
-      "existingLeaveRequest": "You already have a pending leave request."
+      "existingLeaveRequest": "You already have a pending leave request.",
+      "updateLeaveRequest": "Your Leave Request has been",
+      "approved": "approved.",
+      "declined": "declined."
+    }
+  },
+  "payslip": {
+    "title": "Payslip",
+    "filter": {
+      "filterByYear": "Filter By"
+    },
+    "item": {
+      "netSalary": "Net Salary",
+      "totalDeduction": "Total Deduction",
+      "totalHoursWorked": "Total Hours Worked"
+    }
+  },
+  "profile": {
+    "form": {
+      "avatar": {
+        "label": "Image",
+        "actions": {
+          "label": "Upload Image",
+          "takePhoto": "Take Photo",
+          "selectFromGallery": "Select from Gallery",
+          "view": "View Image"
+        }
+      },
+      "japanese_name": {
+        "label": "Japanese Name"
+      },
+      "nickname": {
+        "label": "Nickname"
+      },
+      "phone_number": {
+        "label": "Phone Number"
+      },
+      "email": {
+        "label": "E-mail"
+      }
+    },
+    "notifications": {
+      "updateSuccess": "プロフィールが更新されました",
+      "updateFailed": "プロフィールが更新されませんでした"
     }
   },
   "settings": {
@@ -259,6 +336,12 @@
           "auto": "Auto"
         }
       }
+    }
+  },
+  "news": {
+    "title": "News",
+    "view": {
+      "empty": "No news yet."
     }
   }
 }

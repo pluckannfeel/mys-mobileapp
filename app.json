@@ -2,7 +2,7 @@
   "expo": {
     "name": "mys-app",
     "slug": "mys-app",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
@@ -11,20 +11,39 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Select and upload images.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos.",
+        }
+      ]
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.makeyousmile.app",
+      "icon": "./assets/images/applogo.jpg",
+      "buildNumber": "1.0.3"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "icon": "./assets/images/applogo.jpg",
+      "package": "com.pluckannfeel.mys"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ab5c3a6b-e90c-4bda-9300-3d8f9c3e9fde"
+      }
     }
   }
 }

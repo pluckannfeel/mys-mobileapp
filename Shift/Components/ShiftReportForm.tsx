@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -93,6 +95,7 @@ const ShiftReportForm: React.FC<ReportFormProps> = ({ submitForm, info }) => {
   };
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
@@ -168,7 +171,7 @@ const ShiftReportForm: React.FC<ReportFormProps> = ({ submitForm, info }) => {
         </View>
 
         <View style={styles.optionRow}>
-          <Text>{t("shift.shiftReport.form.toilet_assistance.diaper")}</Text>
+          <Text style={styles.checkboxLabel}>{t("shift.shiftReport.form.toilet_assistance.diaper")}</Text>
           <BouncyCheckbox
             fillColor={theme.colors.pink400}
             isChecked={formik.values.toilet_assistance?.diaper_change}
@@ -989,6 +992,7 @@ const ShiftReportForm: React.FC<ReportFormProps> = ({ submitForm, info }) => {
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 

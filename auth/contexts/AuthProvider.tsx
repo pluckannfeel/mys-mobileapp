@@ -11,6 +11,8 @@ import { useLogin } from "../hooks/useLogin";
 import { useLogout } from "../hooks/useLogout";
 import { useUserInfo } from "../hooks/useUserInfo";
 import { UserInfo } from "../types/userInfo";
+import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 
 interface AuthContextInterface {
   // hasRole: (roles?: string[]) => {};
@@ -18,6 +20,7 @@ interface AuthContextInterface {
   isLoggingOut: boolean;
   login: (email: string, password: string) => Promise<any>;
   logout: () => Promise<any>;
+  authKey: string;
   userInfo?: UserInfo;
   onBoarding: boolean;
   setOnBoarding: (onBoarding: boolean) => void;
@@ -31,6 +34,7 @@ type AuthProviderProps = {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authKey, setAuthKey] = useSecureStorage<string>("authkey", "");
+  const { t } = useTranslation();
 
   // Onboarding data
   const [onBoarding, setOnboarding] = useSecureStorage<boolean>(
@@ -60,8 +64,36 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         return key;
       })
       .catch((err) => {
-        // throw err;]
-        console.log("Error Logging in: ", err);
+        if (err.response) {
+          const statusCode = err.response.status;
+
+          if (statusCode === 401) {
+            // return err.response.data;
+            Toast.show({
+              type: "error",
+              text1: t("common.error"),
+              text2: t("auth.login.toast.invalidCredentials"),
+              visibilityTime: 4000,
+              topOffset: 60,
+            });
+          } else {
+            Toast.show({
+              type: "error",
+              text1: t("common.error"),
+              text2: t("auth.login.toast.serverError"),
+              visibilityTime: 4000,
+              topOffset: 60,
+            });
+          }
+        }
+
+        Toast.show({
+          type: "error",
+          text1: t("common.error"),
+          text2: t("auth.login.toast.serverError"),
+          visibilityTime: 4000,
+          topOffset: 60,
+        });
       });
   };
 
@@ -73,7 +105,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       })
       .catch((err) => {
         // throw err;
-        console.log("Error Logging out: ", err);
+        // console.log("Error Logging out: ", err);
       });
   };
 
@@ -84,20 +116,36 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   // context optimization
-  const value = useMemo(
-    () => ({
-      isLoggingIn,
-      isLoggingOut,
-      login: handleLogin,
-      logout: handleLogout,
-      userInfo,
-      onBoarding,
-      setOnBoarding: handleSetOnBoarding,
-    }),
-    [isLoggingIn, isLoggingOut, userInfo, onBoarding]
-  );
+  // const value = useMemo(
+  //   () => ({
+  //     isLoggingIn,
+  //     isLoggingOut,
+  //     login: handleLogin,
+  //     logout: handleLogout,
+  //     authKey,
+  //     userInfo,
+  //     onBoarding,
+  //     setOnBoarding: handleSetOnBoarding,
+  //   }),
+  //   [isLoggingIn, isLoggingOut, userInfo, onBoarding]
+  // );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        isLoggingIn,
+        isLoggingOut,
+        login: handleLogin,
+        logout: handleLogout,
+        authKey,
+        userInfo,
+        onBoarding,
+        setOnBoarding: handleSetOnBoarding,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export function useAuth() {

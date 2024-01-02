@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   NavigationContainer,
   NavigationProp,
@@ -18,6 +18,9 @@ import GeneralSettingsScreen from "./Settings/Components/General";
 import { useTranslation } from "react-i18next";
 import LeaveRequestsScreen from "./Shift/screens/LeaveRequests";
 import NotificationsScreen from "./Notifications/screens/Notifications";
+import { useWebSocket } from "./Notifications/contexts/WebSocketProvider";
+import { useRegisterDeviceToken } from "./Notifications/hooks/useRegisterDeviceToken";
+import { DeviceToken } from "./Notifications/types/Notification";
 
 // Define the root stack params
 export type RootStackParamList = {
@@ -47,9 +50,9 @@ export type AppNavigationProp = NavigationProp<
 // Define your PrivateStackScreen as a component that renders a navigator
 const PrivateStackScreen = () => {
   const navigation = useNavigation<AppNavigationProp>();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
-  const { isLoggingOut, logout, userInfo} = useAuth();
+  const { isLoggingOut, logout, userInfo } = useAuth();
 
   const handleLogout = () => {
     logout()
@@ -69,7 +72,6 @@ const PrivateStackScreen = () => {
     return <LeaveRequestsScreen userInfo={userInfo as UserInfo} />;
   }
 
-
   return (
     <PrivateStack.Navigator>
       <PrivateStack.Screen
@@ -77,20 +79,35 @@ const PrivateStackScreen = () => {
         component={MainScreen}
         options={{ headerShown: false }}
       />
-      <PrivateStack.Screen name="Settings" component={SettingsScreenWrapper} options={{
-        headerTitle: t("admin.drawer.menu.settings")
-      }} />
-      <PrivateStack.Screen name="GeneralSettings" component={GeneralSettingsScreen} options={{
-        headerTitle: t("admin.drawer.menu.settings")
-      }}  />
-       <PrivateStack.Screen name="LeaveRequests" component={LeaveRequestsScreenWrapper} options={{
-        headerTitle: t("admin.drawer.menu.settings")
-      }} />
-      <PrivateStack.Screen name="Notifications" component={NotificationsScreen} options={{
-        headerTitle: t("admin.drawer.menu.notifications")
-      }} />
+      <PrivateStack.Screen
+        name="Settings"
+        component={SettingsScreenWrapper}
+        options={{
+          headerTitle: t("admin.drawer.menu.settings"),
+        }}
+      />
+      <PrivateStack.Screen
+        name="GeneralSettings"
+        component={GeneralSettingsScreen}
+        options={{
+          headerTitle: t("admin.drawer.menu.settings"),
+        }}
+      />
+      <PrivateStack.Screen
+        name="LeaveRequests"
+        component={LeaveRequestsScreenWrapper}
+        options={{
+          headerTitle: t("admin.drawer.menu.settings"),
+        }}
+      />
+      <PrivateStack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{
+          headerTitle: t("admin.drawer.menu.notifications"),
+        }}
+      />
       {/* <PrivateStack.Screen name="Shift" component={ShiftScreen} /> */}
-
 
       {/* ... other private screens ... */}
     </PrivateStack.Navigator>
@@ -99,6 +116,21 @@ const PrivateStackScreen = () => {
 
 const AppScreens = () => {
   const { userInfo } = useAuth();
+
+  // register the device token here
+  const { deviceToken } = useWebSocket();
+
+  const { isRegistering, registerDeviceToken } = useRegisterDeviceToken();
+
+  useEffect(() => {
+    console.log("register device");
+    if (deviceToken && userInfo) {
+      registerDeviceToken({
+        token: deviceToken,
+        staff_code: userInfo?.staff_code,
+      } as DeviceToken);
+    }
+  }, []);
 
   return (
     <NavigationContainer>

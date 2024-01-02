@@ -10,5 +10,6 @@ const fetchShiftReport = async (id: string): Promise<ShiftReport> => {
 export function useShiftReport(id: string) {
   return useQuery(["shift_report", id], () => fetchShiftReport(id), {
     enabled: !!id, // Fetch the report only if the ID is truthy
+    suspense: true,
   });
 }

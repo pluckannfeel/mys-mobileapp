@@ -15,6 +15,7 @@ const fetchShifts = async (staff_name: string): Promise<ShiftSchedule[]> => {
   export function useShifts(staff_name: string) {
     return useQuery(["shifts"], () => fetchShifts(staff_name), {
         enabled: !!staff_name,
+        suspense: true,
     });
   }
   
