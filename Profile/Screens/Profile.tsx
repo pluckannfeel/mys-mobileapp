@@ -25,10 +25,12 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
-import { Profile } from "../types/profile";
+import { AddDocumentProps, Profile } from "../types/profile";
 import Profileform from "../components/Profileform";
 import { useUpdateProfile } from "../hooks/useUpdateProfile";
 import Toast from "react-native-toast-message";
+import { useAddDocument } from "../hooks/useAddDocument";
+import Loader from "../../core/Components/Loader";
 
 const UserProfileSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -38,15 +40,21 @@ const UserProfileSchema = Yup.object().shape({
 
 type ProfileScreenProps = {
   userInfo: Profile;
+  refetchUserInfo: () => void;
 };
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ userInfo }) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({
+  userInfo,
+  refetchUserInfo,
+}) => {
   const { t } = useTranslation();
   const navigation = useNavigation<AppNavigationProp>();
   const theme = useTheme();
 
   // hook
   const { isUpdating, updateProfile } = useUpdateProfile();
+
+  const { isAdding, addDocument } = useAddDocument();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -114,9 +122,18 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ userInfo }) => {
       });
   };
 
+  const addDocumentHandler = ({
+    staff_id,
+    documentType,
+    documentImage,
+  }: AddDocumentProps) => {
+    console.log(documentType, documentImage);
+    addDocument({ staff_id, documentType, documentImage });
+  };
+
   // console.log(userInfo)
 
-  return isUpdating ? (
+  return isUpdating || isAdding ? (
     <View
       style={{
         flex: 1,
@@ -128,7 +145,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ userInfo }) => {
       <ActivityIndicator size="large" color={theme.colors.primary} />
     </View>
   ) : (
-    <Profileform saveProfile={saveProfileHandler} profileData={userInfo} />
+    // <Loader />
+    <Profileform
+      saveProfile={saveProfileHandler}
+      addDocument={addDocumentHandler}
+      profileData={userInfo}
+      refetchProfileData={refetchUserInfo}
+    />
   );
 };
 

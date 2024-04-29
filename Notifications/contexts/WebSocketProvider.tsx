@@ -12,6 +12,7 @@ import * as SecureStore from "expo-secure-store";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import * as Device from "expo-device";
+import { useSecureStorage } from "../../core/hooks/useSecureStorage";
 
 // Define the type for the context value
 interface WebSocketContextType {
@@ -47,7 +48,14 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [deviceToken, setDeviceToken] = useState<string>();
+
+  const { userInfo } = useAuth();
+
+  // const [deviceToken, setDeviceToken] = useState<string>();
+  const [deviceToken, setDeviceToken] = useSecureStorage<string>(
+    "deviceToken",
+    ""
+  );
 
   // // const { userInfo } = useAuth();
   // let token;
@@ -57,12 +65,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   //   token = authKey
   // }
 
-  let wsUrl: string;
+  // let wsUrl: string;
 
-  wsUrl = `ws://${baseUrl.replace(
-    /^http(s)?:\/\//,
-    ""
-  )}wss/notifications?client=mobile&token=anoynmous`;
+  // wsUrl = `ws://${baseUrl.replace(
+  //   /^http(s)?:\/\//,
+  //   ""
+  // )}wss/notifications?client=mobile&token=anoynmous`;
   // console.log(wsUrl);
 
   useEffect(() => {
@@ -71,6 +79,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     // PUSH NOTIFICATIONS
     const registerForPushNotificationsAsync = async () => {
       let token;
+
       if (Device.isDevice) {
         const { status: existingStatus } =
           await Notifications.getPermissionsAsync();
@@ -97,8 +106,13 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
         });
       }
 
+      // console.log(token)
+
       // alert("device token: " + token);
-      setDeviceToken(token);
+      // setDeviceToken(token as string);
+      
+      console.log(userInfo)
+
       return token;
     };
 

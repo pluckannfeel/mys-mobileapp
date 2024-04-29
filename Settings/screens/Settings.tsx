@@ -1,9 +1,15 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import {useNavigation } from '@react-navigation/native';
-import { AppNavigationProp } from '../../AppScreens';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigationProp } from "../../AppScreens";
+import { useTranslation } from "react-i18next";
 
 type SettingsOptionProps = {
   title: string;
@@ -11,7 +17,11 @@ type SettingsOptionProps = {
   onPress: () => void;
 };
 
-const SettingsOption: React.FC<SettingsOptionProps> = ({ title, iconName, onPress }) => (
+const SettingsOption: React.FC<SettingsOptionProps> = ({
+  title,
+  iconName,
+  onPress,
+}) => (
   <TouchableOpacity style={styles.option} onPress={onPress}>
     <Ionicons name={iconName} size={24} color="grey" />
     <Text style={styles.optionText}>{title}</Text>
@@ -24,7 +34,7 @@ type SettingsScreenProps = {
 };
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ onLogout }) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   const navigation = useNavigation<AppNavigationProp>();
 
   // Handlers for each option can be added here
@@ -35,13 +45,29 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onLogout }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.section}>
-        <SettingsOption title={t("settings.links.account")} iconName="person-outline" onPress={() => handlePressOption('Account')} />
-        <SettingsOption title={t("settings.links.general")}  iconName="settings-outline" onPress={() => handlePressOption('GeneralSettings')} />
-        <SettingsOption title={t("settings.links.help")} iconName="help-circle-outline" onPress={() => handlePressOption('Help')} />
-        <SettingsOption title={t("settings.links.notifications")}  iconName="notifications-outline" onPress={() => handlePressOption('Notifications')} />
+        {/* <SettingsOption
+          title={t("settings.links.account")}
+          iconName="person-outline"
+          onPress={() => handlePressOption("Account")}
+        /> */}
+        <SettingsOption
+          title={t("settings.links.general")}
+          iconName="settings-outline"
+          onPress={() => handlePressOption("GeneralSettings")}
+        />
+        {/* <SettingsOption
+          title={t("settings.links.help")}
+          iconName="help-circle-outline"
+          onPress={() => handlePressOption("Help")}
+        /> */}
+        <SettingsOption
+          title={t("settings.links.notifications")}
+          iconName="notifications-outline"
+          onPress={() => handlePressOption("NotificationSettings")}
+        />
       </View>
       <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
-        <Text style={styles.logoutText}>Log out</Text>
+        <Text style={styles.logoutText}>{t("settings.links.logout")}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -50,39 +76,39 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onLogout }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   section: {
     marginTop: 35,
   },
   option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
   },
   optionText: {
     flex: 1,
     marginLeft: 15,
-    fontSize: 16,
-    color: 'grey',
+    fontSize: 20,
+    color: "grey",
   },
   logoutButton: {
-    backgroundColor: '#f43f5e',
+    backgroundColor: "#f43f5e",
     marginVertical: 20,
     marginHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   logoutText: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
+    fontSize: 20,
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 

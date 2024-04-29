@@ -12,8 +12,8 @@ const updateProfile = async (profile: Profile) => {
   delete profile.created_at;
 
   delete profile.bank_card_images;
-  delete profile.residence_card_details;
-  delete profile.passport_details;
+  // delete profile.residence_card_details;
+  // delete profile.passport_details;
   delete profile.licenses;
 
   formData.append("staff_json", JSON.stringify(profile));

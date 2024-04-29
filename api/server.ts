@@ -6,8 +6,11 @@ import Toast from "react-native-toast-message";
 // export const baseUrl = "https://miraicares.ap-northeast-1.elasticbeanstalk.com/";
 // export const baseUrl = "https://api.mirai-cares.com/";
 // export const baseUrl = "http://192.168.179.7:8000/";
-export const baseUrl = "http://192.168.68.130:8000/";
+// export const baseUrl = "https://127.0.0.1:8000/";
+export const baseUrl = "http://192.168.3.168:8000/";
 // export const baseUrl = "http://localhost:8000/";
+// export const baseUrl =
+//   "https://fkuy7wira5n3shbvxt3xy3wfqm0jhvzq.lambda-url.ap-northeast-1.on.aws/";
 export const googleMapApiKey = process.env.REACT_APP_GOOGLEMAP_APIKEY;
 export const mysOrgCode = process.env.REACT_APP_MYSORG_CODE;
 
@@ -16,7 +19,7 @@ export const mysOrgCode = process.env.REACT_APP_MYSORG_CODE;
 const instance: AxiosInstance = axios.create({
   baseURL: baseUrl,
   // ... other settings
-}); 
+});
 
 // Response interceptor
 instance.interceptors.response.use(

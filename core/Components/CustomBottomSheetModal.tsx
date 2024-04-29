@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { forwardRef, useMemo } from "react";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, useBottomSheet } from "@gorhom/bottom-sheet";
+import CustomBackdrop from "../../Shift/Components/BottomSheetBackdrop";
 export type Ref = BottomSheetModal;
 
 interface BottomModalSheetProps {
@@ -9,16 +10,20 @@ interface BottomModalSheetProps {
   index: number;
   headerText?: string;
   enablePanDownToClose?: boolean;
+  onClose: () => void; // Add this prop to handle closing
 }
 
 const CustomButtomSheetModal = forwardRef<Ref, BottomModalSheetProps>(
-  ({ snapPoints, children, headerText, index, enablePanDownToClose }, ref) => {
+  ({ snapPoints, children, headerText, index, enablePanDownToClose, onClose }, ref) => {
     return (
       <BottomSheetModal
         ref={ref}
         index={index}
         snapPoints={snapPoints}
         detached={true}
+        backdropComponent={(props) => (
+          <CustomBackdrop {...props} onClose={onClose} />
+        )}
         enablePanDownToClose={enablePanDownToClose}
       >
         <View style={styles.contentContainer}>

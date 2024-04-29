@@ -5,6 +5,7 @@ export interface LeaveRequest {
   start_date: Date;
   end_date: Date;
   type: string;
+  number_of_days: number;
   status?: string;
   details: string;
 }

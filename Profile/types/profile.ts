@@ -35,6 +35,10 @@ export interface Profile {
   bank_card_images?: BankCardImage;
   passport_details?: PassportDetails;
   residence_card_details?: ResidenceCardDetails;
+
+  // only for mobile, i decided to separate it for now because of production issues
+  // residence_card_number?: string;
+  // passport_number?: string;
   created_at?: string | null;
   // disabled: boolean;
 }
@@ -77,3 +81,9 @@ export interface FileItem {
     | "bank_card_back";
   url: string;
 }
+
+export type AddDocumentProps = {
+  staff_id: string;
+  documentType: string;
+  documentImage: string;
+};

@@ -23,7 +23,10 @@ type ShiftScreenProps = {
   userInfo: UserInfo;
 };
 
+// const now = new Date();
+
 // set todays date‰
+// const today = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
 const today = new Date();
 
 type ScheduleViewType = "default" | "calendar";

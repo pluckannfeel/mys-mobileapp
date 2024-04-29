@@ -34,7 +34,8 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
   onClose,
 }) => {
   // The snap points for the bottom sheet
-  const snapPoints = useMemo(() => ["40%", "75%", "90"], []);
+  // const snapPoints = useMemo(() => ["40%", "75%", "90"], []);
+  const snapPoints = useMemo(() => ["90"], []);
   const { t } = useTranslation();
 
   // get mys id to pass to the form
@@ -76,12 +77,16 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
             topOffset: 60,
           });
         }
+      })
+      .finally(() => {
+        onClose();
       });
   };
 
   return (
     <BottomSheet
-      index={isVisible ? 1 : -1}
+      // index={isVisible ? 1 : -1}
+      index={0}
       snapPoints={snapPoints}
       enablePanDownToClose={true}
       onClose={onClose}

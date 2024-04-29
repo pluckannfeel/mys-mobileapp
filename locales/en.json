@@ -22,7 +22,8 @@
     "error": "Error",
     "serverError": "Server Error, Contact Administrator.",
     "success": "Success",
-    "permissionDenied": "Permission Denied"
+    "permissionDenied": "Permission Denied",
+    "retry": "Retry"
   },
   "in_progress": {
     "title": "Under Development"
@@ -69,7 +70,10 @@
         "logout": "Logout",
         "settings": "Settings",
         "notifications": "Notifications",
-        "leaveRequests": "Leave Requests"
+        "leaveRequests": "Leave Requests",
+        "emergencyContact": "Emergency Contact",
+        "licenses": "My Licenses",
+        "news": "News"
       }
     },
     "header": {
@@ -218,6 +222,10 @@
       }
     }
   },
+  "upcomingShift": {
+    "title": "Upcoming Shift",
+    "empty": "No upcoming shift."
+  },
   "leaveRequest": {
     "screen": {
       "header": {
@@ -248,6 +256,9 @@
           "paid": "Paid",
           "unpaid": "Unpaid"
         }
+      },
+      "number_of_days": {
+        "label": "Number of Paid Days"
       },
       "start_date": {
         "label": "Start Date"
@@ -295,6 +306,9 @@
           "view": "View Image"
         }
       },
+      "english_name": {
+        "label": "English Name"
+      },
       "japanese_name": {
         "label": "Japanese Name"
       },
@@ -304,13 +318,128 @@
       "phone_number": {
         "label": "Phone Number"
       },
-      "email": {
-        "label": "E-mail"
+      "personal_email": {
+        "label": "Personal Email"
+      },
+      "work_email": {
+        "label": "Work Email"
+      },
+      "postal_code": {
+        "label": "Postal Code"
+      },
+      "address": {
+        "label": "Address"
+      },
+      "prefecture": {
+        "label": "Prefecture"
+      },
+      "municipality": {
+        "label": "City"
+      },
+      "town": {
+        "label": "Town"
+      },
+      "building": {
+        "label": "Building"
+      },
+      "bank_details": {
+        "label": "Bank Information"
+      },
+      "bank_jpbank_yuucho": {
+        "label": "JP Bank / Yuucho"
+      },
+      "customer_number": {
+        "label": "Customer Number"
+      },
+      "bank_name": {
+        "label": "Bank Name"
+      },
+      "branch_name": {
+        "label": "Branch Name"
+      },
+      "account_type": {
+        "label": "Account Type"
+      },
+      "account_number": {
+        "label": "Account Number",
+        "label2": "JP Bank Code Number"
+      },
+      "account_name": {
+        "label": "Account Name"
+      },
+      "card_image_front": {
+        "label": "Card Image (Front)"
+      },
+      "card_image_back": {
+        "label": "Card Image (Back)"
+      },
+      "foreigner": {
+        "label": "Foreigner"
+      },
+      "passport_details": {
+        "label": "Passport Details"
+      },
+      "passport_number": {
+        "label": "Passport No."
+      },
+      "passport_issue_date": {
+        "label": "Date Issued"
+      },
+      "passport_expiry_date": {
+        "label": "Date of Expiration"
+      },
+      "passport_image": {
+        "label": "Passport Photo"
+      },
+      "residence_card_details": {
+        "label": "Residence Card"
+      },
+      "residence_card_number": {
+        "label": "Residence Card No."
+      },
+      "residence_card_issue_date": {
+        "label": "Date Issued"
+      },
+      "residence_card_expiry_date": {
+        "label": "Date Expired"
+      },
+      "documents": {
+        "label": "Documents",
+        "type": {
+          "label": "Document Type",
+          "alert": {
+            "title": "No Document Type",
+            "message": "Please select a document type"
+          }
+        },
+        "options": {
+          "passport": "Passport",
+          "residence_card_front": "Residence Card (Front)",
+          "residence_card_back": "Residence Card (Back)",
+          "bank_card_front": "Bank Card (Front)",
+          "bank_card_back": "Bank Card (Back)"
+        },
+        "actions": {
+          "add": "Add Document (Image)",
+          "save": "Save Document",
+          "change": "Change Document"
+        }
       }
     },
     "notifications": {
-      "updateSuccess": "プロフィールが更新されました",
-      "updateFailed": "プロフィールが更新されませんでした"
+      "updateSuccess": "Profile has been updated.",
+      "updateFailed": "Profile was not updated. Contact Administrator."
+    },
+    "actions": {
+      "save": "Save"
+    }
+  },
+  "emergencyContact": {
+    "title": "Emergency Contact",
+    "headers": {
+      "patient": "Patient",
+      "place": "Location",
+      "contact": "Contact"
     }
   },
   "settings": {
@@ -318,7 +447,8 @@
       "account": "Account",
       "general": "General",
       "help": "Help",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "logout": "Logout"
     },
     "generalSettings": {
       "headers": {
@@ -335,6 +465,19 @@
           "dark": "Dark",
           "auto": "Auto"
         }
+      }
+    },
+    "notificationSettings": {
+      "headers": {
+        "notifications": "Notifications"
+      },
+      "options": {
+        "general": {
+          "on": "On",
+          "off": "Off"
+        },
+        "openSettings": "Open Settings",
+        "guideMessage": "To change the notification settings for Mirai Care, open the device's Settings app. Navigate to 'Settings > Apps' (or 'Applications'), find 'Mirai Care', select it, then go to 'Notifications' and adjust your preferences accordingly."
       }
     }
   },

@@ -22,7 +22,8 @@ interface CalendarItemProps {
 
 const CalendarItem: React.FC<CalendarItemProps> = ({ item, showRecords }) => {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
 
   const itemPressed = useCallback(() => {
     Alert.alert(item.title);
@@ -31,7 +32,11 @@ const CalendarItem: React.FC<CalendarItemProps> = ({ item, showRecords }) => {
   if (isEmpty(item)) {
     return (
       <View style={styles.emptyItem}>
-        <Text style={styles.emptyItemText}>No Events Planned Today</Text>
+        <Text style={styles.emptyItemText}>
+          {currentLanguage === "en"
+            ? "No Events Planned Today"
+            : "本日はシフトの予定はありません"}
+        </Text>
       </View>
     );
   }
@@ -71,6 +76,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "lightgrey",
     flexDirection: "row",
+    flexWrap: "wrap",
   },
   itemHourText: {
     color: "black",

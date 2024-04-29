@@ -22,6 +22,7 @@ interface AuthContextInterface {
   logout: () => Promise<any>;
   authKey: string;
   userInfo?: UserInfo;
+  refetchUserInfo?: () => void;
   onBoarding: boolean;
   setOnBoarding: (onBoarding: boolean) => void;
 }
@@ -44,7 +45,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { isLoggingIn, login } = useLogin();
   const { isLoggingOut, logout } = useLogout();
-  const { data: userInfo } = useUserInfo(authKey);
+  const { data: userInfo, refetch } = useUserInfo(authKey);
 
   // const hasRole = (roles?: string[]) => {
   //   if (!roles || roles.length === 0) {
@@ -139,6 +140,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         logout: handleLogout,
         authKey,
         userInfo,
+        refetchUserInfo: refetch,
         onBoarding,
         setOnBoarding: handleSetOnBoarding,
       }}

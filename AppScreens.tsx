@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import {
   NavigationContainer,
   NavigationProp,
@@ -20,7 +20,13 @@ import LeaveRequestsScreen from "./Shift/screens/LeaveRequests";
 import NotificationsScreen from "./Notifications/screens/Notifications";
 import { useWebSocket } from "./Notifications/contexts/WebSocketProvider";
 import { useRegisterDeviceToken } from "./Notifications/hooks/useRegisterDeviceToken";
-import { DeviceToken } from "./Notifications/types/Notification";
+import {
+  DeviceToken,
+  NotificationParams,
+} from "./Notifications/types/Notification";
+import { usePushNotifications } from "./Notifications/hooks/usePushNotifications";
+import { Alert } from "react-native";
+import NotificationSettingsScreen from "./Settings/Components/NotificationSettings";
 
 // Define the root stack params
 export type RootStackParamList = {
@@ -36,6 +42,7 @@ export type PrivateStackParamList = {
   GeneralSettings: undefined;
   LeaveRequests: undefined;
   Notifications: undefined;
+  NotificationSettings: undefined;
   // ... other private screens ...
 };
 
@@ -86,9 +93,17 @@ const PrivateStackScreen = () => {
           headerTitle: t("admin.drawer.menu.settings"),
         }}
       />
+
       <PrivateStack.Screen
         name="GeneralSettings"
         component={GeneralSettingsScreen}
+        options={{
+          headerTitle: t("admin.drawer.menu.settings"),
+        }}
+      />
+      <PrivateStack.Screen
+        name="NotificationSettings"
+        component={NotificationSettingsScreen}
         options={{
           headerTitle: t("admin.drawer.menu.settings"),
         }}
@@ -118,19 +133,24 @@ const AppScreens = () => {
   const { userInfo } = useAuth();
 
   // register the device token here
-  const { deviceToken } = useWebSocket();
+  // const { deviceToken } = useWebSocket();
+
+  const { expoPushToken } = usePushNotifications();
 
   const { isRegistering, registerDeviceToken } = useRegisterDeviceToken();
 
   useEffect(() => {
-    console.log("register device");
-    if (deviceToken && userInfo) {
+    if (expoPushToken && userInfo) {
+      // console.log(expoPushToken);
+      // console.log(userInfo);
       registerDeviceToken({
-        token: deviceToken,
-        staff_code: userInfo?.staff_code,
-      } as DeviceToken);
+        token: expoPushToken.data,
+        staff_code: userInfo.staff_code,
+      } as DeviceToken).then((data) => {
+        // console.log("device token saved ");
+      });
     }
-  }, []);
+  }, [expoPushToken, userInfo]);
 
   return (
     <NavigationContainer>

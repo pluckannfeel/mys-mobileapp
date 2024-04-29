@@ -22,7 +22,8 @@
     "error": "エラー",
     "serverError": "エラー, 管理者を連絡して下さい。",
     "success": "成功",
-    "permissionDenied": "権限がありません"
+    "permissionDenied": "権限がありません",
+    "retry": "トップー戻る"
   },
   "in_progress": {
     "title": "開発中"
@@ -58,12 +59,15 @@
         "home": "ホーム",
         "shift": "シフト・業務日誌",
         "payslip": "給料明細・源泉徴収票",
-        "document": "雇用契約・資格など",
+        "document": "雇用契約",
         "profile": "個人情報",
         "settings": "設定",
         "notifications": "お知らせ",
         "leaveRequests": "休日／有給申請",
-        "logout": "ログアウト"
+        "logout": "ログアウト",
+        "emergencyContact": "緊急連絡先",
+        "licenses": "自分の資格",
+        "news": "お知らせ"
       }
     },
     "header": {
@@ -224,6 +228,10 @@
       }
     }
   },
+  "upcomingShift": {
+    "title": "次のシフト",
+    "empty": "次日のシフトはありません。"
+  },
   "leaveRequest": {
     "screen": {
       "header": {
@@ -254,6 +262,9 @@
           "paid": "有給する",
           "unpaid": "有給しない"
         }
+      },
+      "number_of_days": {
+        "label": "日数 (有給)"
       },
       "start_date": {
         "label": "開始日"
@@ -304,19 +315,129 @@
       "japanese_name": {
         "label": "氏名（カナ）"
       },
+      "english_name": {
+        "label": "NAME"
+      },
       "nickname": {
         "label": "ニックネーム"
       },
       "phone_number": {
         "label": "電話番号"
       },
-      "email": {
-        "label": "メールアドレス"
+      "personal_email": {
+        "label": "個人メールアドレス"
+      },
+      "work_email": {
+        "label": "職員メールアドレス"
+      },
+      "postal_code": {
+        "label": "郵便番号"
+      },
+      "address": {
+        "label": "住所"
+      },
+      "prefecture": {
+        "label": "都道府県"
+      },
+      "municipality": {
+        "label": "市区町村"
+      },
+      "town": {
+        "label": "町名"
+      },
+      "building": {
+        "label": "建物名"
+      },
+      "bank_details": {
+        "label": "銀行口座情報"
+      },
+      "bank_jpbank_yuucho": {
+        "label": "ゆうちょ銀行"
+      },
+      "customer_number": {
+        "label": "顧客番号"
+      },
+      "bank_name": {
+        "label": "銀行名"
+      },
+      "branch_name": {
+        "label": "支店名"
+      },
+      "account_type": {
+        "label": "口座種別"
+      },
+      "account_number": {
+        "label": "口座番号",
+        "label2": "記号番号"
+      },
+      "account_name": {
+        "label": "口座名義名カナ"
+      },
+      "card_image_front": {
+        "label": "カード画像(表)"
+      },
+      "card_image_back": {
+        "label": "カード画像(裏)"
+      },
+      "foreigner": {
+        "label": "外国人"
+      },
+      "passport_details": {
+        "label": "旅券情報"
+      },
+      "passport_number": {
+        "label": "旅券番号"
+      },
+      "passport_issue_date": {
+        "label": "発行日"
+      },
+      "passport_expiry_date": {
+        "label": "有効期限"
+      },
+      "passport_image": {
+        "label": "旅券画像"
+      },
+      "residence_card_details": {
+        "label": "在留カード情報"
+      },
+      "residence_card_number": {
+        "label": "在留カード番号"
+      },
+      "residence_card_issue_date": {
+        "label": "発行日"
+      },
+      "residence_card_expiry_date": {
+        "label": "有効期限"
+      },
+      "documents": {
+        "label": "材料カード、パÏスポート、銀行カード　など",
+        "type": {
+          "label": "画像をアップロード",
+          "alert": {
+            "title": "お願いします",
+            "message": "書類タイプを選択してください"
+          }
+        },
+        "options": {
+          "passport": "パスポート",
+          "residence_card_front": "在留カード（表）",
+          "residence_card_back": "在留カード（裏）",
+          "bank_card_front": "銀行カード（表）",
+          "bank_card_back": "銀行カード（裏）"
+        },
+        "actions": {
+          "add": "アップロード",
+          "save": "保存する",
+          "change": "変更する"
+        }
       }
     },
     "notifications": {
       "updateSuccess": "プロフィールが更新されました",
       "updateFailed": "プロフィールが更新されませんでした"
+    },
+    "actions": {
+      "save": "保存"
     }
   },
   "settings": {
@@ -324,7 +445,8 @@
       "account": "アカウント",
       "general": "一般",
       "help": "ヘルプ",
-      "notifications": "通知"
+      "notifications": "連絡事項",
+      "logout": "ログアウト"
     },
     "generalSettings": {
       "headers": {
@@ -342,6 +464,27 @@
           "auto": "自動"
         }
       }
+    },
+    "notificationSettings": {
+      "headers": {
+        "notifications": "連絡事項"
+      },
+      "options": {
+        "general": {
+          "on": "オン",
+          "off": "オフ"
+        },
+        "openSettings": "設定を開く",
+        "guideMessage": "Mirai Careの通知設定を変更するには、デバイスの「設定」アプリを開いてください。「設定 > アプリ」（または「アプリケーション」）に進み、「Mirai Care」を探して選択し、「通知」に進んで、ご希望に応じて設定を調整してください。"
+      }
+    }
+  },
+  "emergencyContact": {
+    "title": "緊急連絡先",
+    "headers": {
+      "patient": "利用者",
+      "place": "場所",
+      "contact": "連絡先"
     }
   },
   "news": {

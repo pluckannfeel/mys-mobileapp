@@ -32,14 +32,14 @@ const paddingHorizontalValue = (SCREEN_WIDTH - ITEM_WIDTH - 5) / 2;
 
 // this is the shift schedule items
 
-interface ShiftItemProps {
+interface ShiftDayProps {
   // buttonRef?: React.RefObject<TouchableOpacity>;
   date: Date;
   isActive: boolean;
   onSelect: (date: Date) => void;
 }
 
-const ShiftItem: React.FC<ShiftItemProps> = React.memo(
+const ShiftDay: React.FC<ShiftDayProps> = React.memo(
   ({ date, isActive, onSelect }) => {
     const { language } = useSettings();
 
@@ -82,6 +82,7 @@ const DefaultView: React.FC<Props> = ({
   setSelectedDate,
   shifts,
 }) => {
+  // console.log(selectedDate);
   // get HeaderHeight
   const headerHeight = useHeaderHeight();
   // const theme = useTheme();
@@ -186,7 +187,7 @@ const DefaultView: React.FC<Props> = ({
   // date day flatlist items
   const renderItem = useCallback(
     ({ item }: { item: Date }) => (
-      <ShiftItem
+      <ShiftDay
         // buttonRef={shiftItemRef}˝
         date={item}
         isActive={
@@ -197,6 +198,8 @@ const DefaultView: React.FC<Props> = ({
     ),
     [selectedDate, handleSelectDate]
   );
+
+  // console.log(shifts);
 
   return (
     <Fragment>
@@ -250,6 +253,7 @@ const DefaultView: React.FC<Props> = ({
           schedules={shifts.filter((schedule) => {
             const start = new Date(schedule.start);
             const end = new Date(schedule.end);
+
             const selectedDateStart = new Date(
               Date.UTC(
                 selectedDate.getFullYear(),
@@ -266,22 +270,29 @@ const DefaultView: React.FC<Props> = ({
             );
 
             // Check if the end time is exactly midnight
-            const isEndMidnight =
-              end.getHours() === 0 &&
-              end.getMinutes() === 0 &&
-              end.getSeconds() === 0;
+            // const isEndMidnight =
+            //   end.getHours() === 0 &&
+            //   end.getMinutes() === 0 &&
+            //   end.getSeconds() === 0;
 
-            // For a shift that ends at exactly midnight, exclude it from the next day
-            if (isEndMidnight) {
-              return (
-                start < selectedDateEnd &&
-                end > selectedDateStart &&
-                end.getDate() === selectedDateStart.getDate()
-              );
-            }
+            // // For a shift that ends at exactly midnight, exclude it from the next day
+            // if (isEndMidnight) {
+            //   return (
+            //     start < selectedDateEnd &&
+            //     end > selectedDateStart &&
+            //     end.getDate() === selectedDateStart.getDate()
+            //   );
+            // }
 
             // For all other shifts, use the original condition
-            return start < selectedDateEnd && end > selectedDateStart;
+            // return start < selectedDateEnd && end > selectedDateStart;
+
+            // Adjusted logic to handle shifts that span across days
+            return (
+              (start < selectedDateEnd && start >= selectedDateStart) ||
+              (end > selectedDateStart && end <= selectedDateEnd) ||
+              (start < selectedDateStart && end > selectedDateEnd)
+            );
           })}
         />
       </SafeAreaView>

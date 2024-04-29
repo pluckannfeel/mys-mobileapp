@@ -9,11 +9,13 @@ const registerDeviceToken = async (
   const formData = new FormData();
   formData.append("credentials_json", JSON.stringify(credentials));
 
-  console.log(credentials);
+  console.log("register device token hook");
+  // console.log(credentials);
   const { data } = await axiosInstance.post(
     "/device_tokens/register",
     formData
   );
+
   return data;
   //   return {} as DeviceToken;
 };

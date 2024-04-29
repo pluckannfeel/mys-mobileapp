@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FileItem } from "../types/profile";
+import { useTranslation } from "react-i18next";
 
 type FilesProps = {
   files: FileItem[];
@@ -17,6 +18,8 @@ type FilesProps = {
 };
 
 const Files: React.FC<FilesProps> = ({ files, onAddFile, onViewFile }) => {
+  const { t } = useTranslation();
+
   const renderItem = ({ item }: { item: FileItem }) => {
     const iconName =
       item.file_type === "passport" ? "passport" : "document-text"; // Example: change as needed
@@ -39,7 +42,9 @@ const Files: React.FC<FilesProps> = ({ files, onAddFile, onViewFile }) => {
   return (
     <View style={styles.filesContainer}>
       <TouchableOpacity onPress={onAddFile} style={styles.addButton}>
-        <Text style={styles.addButtonText}>Add Documents</Text>
+        <Text style={styles.addButtonText}>
+          {t("profile.form.documents.actions.add")}
+        </Text>
       </TouchableOpacity>
       <FlatList
         data={files}

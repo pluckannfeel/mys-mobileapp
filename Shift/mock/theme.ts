@@ -13,8 +13,11 @@ export function getTheme() {
     // calendarBackground: "transparent",
     
     // arrows
-    arrowColor: "black",
-    arrowStyle: { padding: 0 },
+    arrowColor: "#FFF",
+    // arrowStyle: { padding: 5 },
+    // add padding to arrows to make them easier to press
+    arrowStyle: { padding: 15 },
+    // arrowContainerStyle: { padding: 10 },
     // knob
     expandableKnobColor: themeColor,
     // month

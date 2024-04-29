@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "445370062196",
+    "project_id": "mirai-care-58f1c",
+    "storage_bucket": "mirai-care-58f1c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445370062196:android:f27e1fcbebd50549ed8821",
+        "android_client_info": {
+          "package_name": "com.makeyousmile.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4t3pJT78zAeVQoaLY59ZrC_yirIaTY2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,82 +1,94 @@
+import React from "react";
+import { Platform, View, StyleProp, ViewStyle } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import { StyleProp, View, ViewStyle } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
 
 interface FilterSelectProps {
   items: { label: string; value: number }[];
   onValueChange: (value: number, name: string) => void;
   label: string;
-  onDonePress?: () => void;
-  onBlur?: () => void;
-  placeholder?: string;
   value?: number;
   name: string;
   style?: StyleProp<ViewStyle>;
   placeholderColor: string;
 }
 
-export const FilterSelect: React.FC<FilterSelectProps> = ({
-  items,
-  onValueChange,
-  onDonePress,
-  label,
-  // onBlur,
-  placeholder,
-  value,
-  name,
-  style,
-  placeholderColor = "#000",
-}) => {
-  return (
-    <View style={style}>
-      <RNPickerSelect
-        onValueChange={(value) => onValueChange(value, name)}
-        items={items}
-        useNativeAndroidPickerStyle={false}
-        onDonePress={onDonePress}
-        value={value}
-        placeholder={{ label: label, color: placeholderColor, value: "" }}
-        // Icon={
-        //   // @ts-ignore
-        //   () => <MaterialIcons name="arrow-drop-down" size={24} color="#000" />
-        // }
-        // Icon={() => {
-        //   return <Ionicons name="md-arrow-down" size={24} color="gray" />;
-        // }}
-        style={{
-          ...pickerSelectStyles,
-          placeholder: {
-            // color: placeholderColor,
-            fontSize: 18,
-            // fontWeight: "bold",
-          },
-          iconContainer: {
-            top: 0,
-            right: -25,
-          },
-        }}
-
-        // You can spread other props if needed
-      />
-    </View>
-  );
-};
-
 const pickerSelectStyles = {
   inputIOS: {
     fontSize: 20,
-    flex: 1, // Ensure input takes the available space excluding icon
-    // Add other styles for iOS input
+    flex: 1,
   },
   inputAndroid: {
     fontSize: 20,
-    flex: 1,
-    color: 'black', // Set a text color here
-    // Other styles...
+    color: "black",
+    borderRadius: 5,
   },
   pickerItem: {
-    fontSize: 20, // Set your desired font size for picker items
-    // Add other styles for picker items
+    fontSize: 20,
   },
-  // Add other styles as needed
 };
+
+const FilterSelect: React.FC<FilterSelectProps> = React.memo(
+  ({
+    items,
+    onValueChange,
+    label,
+    value,
+    name,
+    style,
+    placeholderColor = "#000",
+  }) => {
+    // Render different picker based on the platform
+    if (Platform.OS === "android") {
+      return (
+        <View
+          style={{
+            // ...style,
+            // borderWidth: 1,
+            // borderColor: "#000",
+            // borderRadius: 5,
+            paddingVertical: 10,
+            // marginBottom: 10,
+            minWidth: "35%",
+          }}
+        >
+          <Picker
+            selectedValue={value}
+            onValueChange={(itemValue) => onValueChange(itemValue, name)}
+            style={pickerSelectStyles.inputAndroid}
+            dropdownIconColor={placeholderColor}
+          >
+            {/* Placeholder item */}
+            {/* {label && <Picker.Item label={label} value="" />} */}
+            {/* Other items */}
+            {items.map((item, index) => (
+              <Picker.Item key={index} label={item.label} value={item.value} />
+            ))}
+          </Picker>
+        </View>
+      );
+    } else {
+      // iOS and other platforms use RNPickerSelect
+      return (
+        <View style={style}>
+          <RNPickerSelect
+            onValueChange={(value) => onValueChange(value, name)}
+            items={items}
+            value={value}
+            placeholder={{ label: label, color: placeholderColor, value: "" }}
+            style={{
+              ...pickerSelectStyles,
+              iconContainer: {
+                top: 0,
+                right: -25,
+              },
+            }}
+            useNativeAndroidPickerStyle={false}
+          />
+        </View>
+      );
+    }
+  }
+);
+
+export { FilterSelect };

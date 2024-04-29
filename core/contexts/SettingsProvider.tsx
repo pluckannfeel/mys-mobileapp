@@ -16,6 +16,8 @@ interface SettingsContextInterface {
   mode: ModeThemeProp;
   changeLanguage: (language: string) => void;
   changeMode: (mode: ModeThemeProp) => void;
+  // notification: boolean;
+  // changeNotifications: (notification: boolean) => void;
 }
 
 export const SettingsContext = createContext({} as SettingsContextInterface);
@@ -32,14 +34,23 @@ const SettingsProvider = ({ children }: SettingsProviderProps) => {
 
   const [mode, setMode] = useSecureStorage<ModeThemeProp>("mode", "light");
 
+  // const [notification, setNotification] = useSecureStorage<boolean>(
+  //   "notification",
+  //   true
+  // );
+
   useEffect(() => {
     i18n.changeLanguage(language);
-  }, []);
+  }, [language]); // Add language as a dependency
 
-  const changeLanguage = async (newLanguage: string) => {
+  const changeLanguage = (newLanguage: string) => {
     setLanguage(newLanguage);
     i18n.changeLanguage(newLanguage); // Update i18n language
   };
+
+  // const changeNotifications = (notification: boolean) => {
+  //   setNotification(notification);
+  // };
 
   const changeMode = (newMode: ModeThemeProp) => setMode(newMode);
 
@@ -49,6 +60,8 @@ const SettingsProvider = ({ children }: SettingsProviderProps) => {
       mode,
       changeLanguage,
       changeMode,
+      // notification,
+      // changeNotifications,
     }),
     [language, mode]
   );

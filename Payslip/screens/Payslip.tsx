@@ -108,6 +108,7 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
             label: year.toString(), // Convert number to string for the label
           }))}
           onValueChange={(value) => {
+            // console.log(value);
             setSelectedYear(value); // Update the state
           }}
         />
@@ -120,7 +121,7 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
       <SafeAreaView
         style={[styles.container, { marginTop: headerHeight + 10 }]}
       >
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
 
         <FlatList
           data={payslips}

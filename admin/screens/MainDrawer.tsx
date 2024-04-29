@@ -1,5 +1,12 @@
-import React, { useLayoutEffect, useMemo } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import React, { useEffect, useLayoutEffect, useMemo } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -25,12 +32,61 @@ import { useTranslation } from "react-i18next";
 import LeaveRequestsScreen from "../../Shift/screens/LeaveRequests";
 import LeaveRequestBottomSheet from "../../Shift/Components/LeaveRequestBottomSheet";
 import { Profile } from "../../Profile/types/profile";
+import { useWebSocket } from "../../Notifications/contexts/WebSocketProvider";
+import { useRegisterDeviceToken } from "../../Notifications/hooks/useRegisterDeviceToken";
+import {
+  DeviceToken,
+  NotificationParams,
+} from "../../Notifications/types/Notification";
+import { usePushNotifications } from "../../Notifications/hooks/usePushNotifications";
+import EmergencyContactScreen from "../../Emergency_Contact/screens/EmergencyContacts";
+import { theme } from "../../core/theme/theme";
+import LicenseScreen from "../../Licenses/screens/License";
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { userInfo, logout } = useAuth();
   const navigation = useNavigation<AppNavigationProp>();
 
   const { t } = useTranslation();
+
+  const { notificationResponse } = usePushNotifications();
+
+  useEffect(() => {
+    if (notificationResponse) {
+      if (notificationResponse) {
+        const notificationData = notificationResponse.notification.request
+          .content.data as NotificationParams;
+
+        switch (notificationData.type) {
+          case "shift_reminder":
+            // Do something
+            // console.log("Shift reminder");
+
+            navigation.navigate("Shift", notificationData.params);
+
+            if (notificationData.params) {
+              // Example of showing an alert
+              Alert.alert(
+                "Shift Schedule",
+                `Please confirm your schedule with ${notificationData.params.patient} `,
+                [
+                  {
+                    text: "View",
+                    // onPress: () => navigation.navigate("Shift"),
+                    onPress: () => console.log(notificationData.params),
+                  },
+                  { text: "Cancel", style: "cancel" },
+                ]
+              );
+            }
+
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }, [notificationResponse]);
 
   return (
     <DrawerContentScrollView
@@ -95,7 +151,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 const Drawer = createDrawerNavigator();
 
 const MainScreen = () => {
-  const { userInfo } = useAuth();
+  const { userInfo, refetchUserInfo } = useAuth();
   const navigation = useNavigation<AppNavigationProp>();
   const theme = useTheme();
   const { t } = useTranslation();
@@ -113,7 +169,12 @@ const MainScreen = () => {
   };
 
   const ProfileScreenWrapper = () => {
-    return <ProfileScreen userInfo={{ ...userInfo } as Profile} />;
+    return (
+      <ProfileScreen
+        userInfo={{ ...userInfo } as Profile}
+        refetchUserInfo={refetchUserInfo as () => void}
+      />
+    );
   };
 
   const ShiftScreenWrapper = () => {
@@ -126,6 +187,18 @@ const MainScreen = () => {
 
   const PayslipScreenWrapper = () => {
     return <PayslipScreen userInfo={userInfo as UserInfo} />;
+  };
+
+  const EmergencyContactWrapper = () => {
+    return <EmergencyContactScreen userInfo={userInfo as UserInfo} />;
+  };
+
+  const DocumentScreenWrapper = () => {
+    return <DocumentScreen userInfo={userInfo as UserInfo} />;
+  };
+
+  const LicenseScreenWrapper = () => {
+    return <LicenseScreen userInfo={userInfo as UserInfo} />;
   };
 
   return (
@@ -179,13 +252,27 @@ const MainScreen = () => {
       />
       <Drawer.Screen
         name="Document"
-        component={React.memo(DocumentScreen)}
+        component={React.memo(DocumentScreenWrapper)}
         options={{ drawerLabel: t("admin.drawer.menu.document") }}
+      />
+      <Drawer.Screen
+        name="EmergencyContact"
+        component={React.memo(EmergencyContactWrapper)}
+        options={{
+          drawerLabel: t("admin.drawer.menu.emergencyContact"),
+          headerTitle: t("admin.drawer.menu.emergencyContact"),
+        }}
       />
       <Drawer.Screen
         name="Profile"
         component={React.memo(ProfileScreenWrapper)}
         options={{ drawerLabel: t("admin.drawer.menu.profile") }}
+      />
+
+      <Drawer.Screen
+        name="License"
+        component={React.memo(LicenseScreenWrapper)}
+        options={{ drawerLabel: t("admin.drawer.menu.licenses") }}
       />
       {/* Add other screens here as needed */}
     </Drawer.Navigator>
@@ -200,7 +287,7 @@ const styles = StyleSheet.create({
   },
   userInfoSection: {
     padding: 18,
-    backgroundColor: "#fb7185",
+    backgroundColor: theme.colors.pink500,
     marginBottom: 10,
   },
   userRow: {
@@ -219,14 +306,14 @@ const styles = StyleSheet.create({
     flex: 1, // Allows text to expand to the available space
   },
   userName: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
     color: "white",
     // This will truncate the text with an ellipsis if it's too long
     overflow: "hidden",
   },
   userEmail: {
-    fontSize: 14,
+    fontSize: 16,
     color: "white",
   },
   editButton: {

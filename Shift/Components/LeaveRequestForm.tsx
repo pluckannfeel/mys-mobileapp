@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  SafeAreaView,
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
@@ -18,11 +19,16 @@ import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import DatePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ReportRadioGroup from "./ReportRadioButton";
 import { leave_types } from "../helpers/pickerOptions";
+import { format } from "date-fns";
 
 interface LeaveRequestFormProps {
   submitForm: (values: LeaveRequest) => void;
@@ -34,12 +40,24 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
   leaveRequestData,
 }) => {
   const { t, i18n } = useTranslation();
-  const [isStartDatePickerVisible, setStartDatePickerVisible] =
-    useState<boolean>(false);
-  const [isEndDatePickerVisible, setEndDatePickerVisible] =
-    useState<boolean>(false);
-  // const [startDate, setStartDate] = useState(new Date());
-  // const [endDate, setEndDate] = useState(new Date());
+
+  // for android only
+  const [isStartDatePickerAndroidVisible, setStartDatePickerAndroidVisibility] =
+    useState(false);
+  const [isEndDatePickerAndroidVisible, setEndDatePickerAndroidVisibility] =
+    useState(false);
+
+  const handleAndroidStartDateConfirm = (date: Date) => {
+    // console.warn("A date has been picked: ", date);
+    formik.setFieldValue("start_date", date || formik.values.start_date);
+    setStartDatePickerAndroidVisibility(false);
+  };
+
+  const handleAndroidEndDateConfirm = (date: Date) => {
+    // console.warn("A date has been picked: ", date);
+    formik.setFieldValue("end_date", date || formik.values.start_date);
+    setEndDatePickerAndroidVisibility(false);
+  };
 
   const currLanguage = i18n.language;
 
@@ -47,6 +65,7 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
     ...leaveRequestData,
     start_date: new Date(),
     end_date: new Date(),
+    number_of_days: 0,
   };
 
   const validationSchema = Yup.object().shape({
@@ -68,15 +87,19 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
     validationSchema,
     // onSubmit,
     onSubmit: (values) => {
-      submitForm(values as LeaveRequest);
-      // console.log(values)
+      submitForm({
+        ...values,
+        number_of_days: parseInt(values.number_of_days.toString()),
+      } as LeaveRequest);
+      // console.log(values);
     },
   });
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        // behavior={Platform.OS === "ios" ? "padding" : "position"}
+        behavior={"padding"}
         style={{ flex: 1 }}
       >
         <ScrollView
@@ -85,7 +108,6 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
         >
           <Text style={styles.note}>{t("leaveRequest.form.note")}</Text>
 
-          {/* meal frequency */}
           <ReportRadioGroup
             name="leave_type" // replace with the name of your field
             options={leave_types}
@@ -93,24 +115,75 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
             headerLabel={t("leaveRequest.form.leave_type.label")}
           />
 
+          <View style={styles.dividerContainer}>
+            <Text style={styles.header}>
+              {t("leaveRequest.form.number_of_days.label")}
+            </Text>
+            <TextInput
+              numberOfLines={1}
+              // placeholder={t("leaveRequest.form.number_of_days.label")}
+              style={[styles.dividerInput]}
+              keyboardType="number-pad"
+              onChangeText={formik.handleChange("number_of_days")}
+              onBlur={formik.handleBlur("number_of_days")}
+              // value={formik.values.number_of_days}
+              value={formik.values.number_of_days.toString()}
+            />
+          </View>
+
           <View style={styles.dateFieldContainer}>
             <Text style={styles.dateFieldLabel}>{`${t(
               "leaveRequest.form.start_date.label"
             )} :`}</Text>
-            <DateTimePicker
-              display="default"
-              mode="date"
-              value={formik.values.start_date}
-              onChange={(event, selectedDate) => {
-                setStartDatePickerVisible(Platform.OS === "ios");
-                formik.setFieldValue(
-                  "start_date",
-                  selectedDate || formik.values.start_date
-                );
-              }}
-              locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
-              style={styles.dateFieldInput}
-            />
+            {Platform.OS === "ios" ? (
+              <DatePicker
+                display="default"
+                mode="date"
+                value={formik.values.start_date}
+                maximumDate={new Date(2030, 12, 31)}
+                minimumDate={new Date(2020, 1, 1)}
+                onChange={(event: DateTimePickerEvent, selectedDate) => {
+                  // const {
+                  //   type,
+                  //   nativeEvent: { timestamp },
+                  // } = event;
+                  // setStartDatePickerVisible(Platform.OS === "ios");
+                  formik.setFieldValue(
+                    "start_date",
+                    selectedDate || formik.values.start_date
+                  );
+                }}
+                locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
+                style={styles.dateFieldInput}
+              />
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={{
+                    paddingVertical: 5,
+                  }}
+                  onPress={() => setStartDatePickerAndroidVisibility(true)}
+                >
+                  <Text>{format(formik.values.start_date, "yyyy/MM/dd")}</Text>
+                </TouchableOpacity>
+                <DateTimePickerModal
+                  isVisible={isStartDatePickerAndroidVisible}
+                  mode="date"
+                  onConfirm={handleAndroidStartDateConfirm}
+                  onCancel={() => setStartDatePickerAndroidVisibility(false)}
+                  onChange={(selectedDate) => {
+                    setStartDatePickerAndroidVisibility(
+                      !isStartDatePickerAndroidVisible
+                    );
+                    // formik.setFieldValue(
+                    //   "start_date",
+                    //   selectedDate || formik.values.start_date
+                    // );
+                  }}
+                  style={styles.dateFieldInput}
+                />
+              </>
+            )}
           </View>
 
           {formik.touched.start_date && formik.errors.start_date && (
@@ -123,20 +196,51 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
             <Text style={styles.dateFieldLabel}>{`${t(
               "leaveRequest.form.end_date.label"
             )} :`}</Text>
-            <DateTimePicker
-              display="default"
-              mode="date"
-              locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
-              value={formik.values.end_date} // Make sure 'end_date' is part of your form's initial values
-              onChange={(event, selectedDate) => {
-                setEndDatePickerVisible(Platform.OS === "ios");
-                formik.setFieldValue(
-                  "end_date",
-                  selectedDate || formik.values.end_date
-                );
-              }}
-              style={styles.dateFieldInput}
-            />
+            {Platform.OS === "ios" ? (
+              <DatePicker
+                display="default"
+                mode="date"
+                maximumDate={new Date(2030, 12, 31)}
+                minimumDate={new Date(2020, 1, 1)}
+                locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
+                value={formik.values.end_date} // Make sure 'end_date' is part of your form's initial values
+                onChange={(event: DateTimePickerEvent, selectedDate) => {
+                  // setEndDatePickerVisible(Platform.OS === "ios");
+                  formik.setFieldValue(
+                    "end_date",
+                    selectedDate || formik.values.end_date
+                  );
+                }}
+                style={styles.dateFieldInput}
+              />
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={{
+                    paddingVertical: 5,
+                  }}
+                  onPress={() => setEndDatePickerAndroidVisibility(true)}
+                >
+                  <Text>{format(formik.values.end_date, "yyyy/MM/dd")}</Text>
+                </TouchableOpacity>
+                <DateTimePickerModal
+                  isVisible={isEndDatePickerAndroidVisible}
+                  mode="date"
+                  onConfirm={handleAndroidEndDateConfirm}
+                  onCancel={() => setEndDatePickerAndroidVisibility(false)}
+                  onChange={(selectedDate) => {
+                    setEndDatePickerAndroidVisibility(
+                      !isEndDatePickerAndroidVisible
+                    );
+                    // formik.setFieldValue(
+                    //   "start_date",
+                    //   selectedDate || formik.values.start_date
+                    // );
+                  }}
+                  style={styles.dateFieldInput}
+                />
+              </>
+            )}
           </View>
           {formik.touched.end_date && formik.errors.end_date && (
             <Text style={styles.errorText}>

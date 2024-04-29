@@ -1,14 +1,18 @@
 export const theme = {
   colors: {
-    primary: "#fb7185",
+    // primary: "#fb7185",
+    primary: "#9A2F7C",
     secondary: "#e11d48",
     // ... other colors
     text: "#4b5563",
     // darkerPink: "#e11d48" darker
-    pink300: "#fda4af", //roses color
-    pink400: "#fb7185",
-    pink500: "#f43f5e",
-    green300: "#71CD47"
+    // pink300: "#9A2F7C", //roses color
+    // pink400: "#fb7185",
+    // pink500: "#f43f5e",
+    pink300: "#A44389",
+    pink400: "#9A2F7C",
+    pink500: "#8A2A6F",
+    green300: "#71CD47",
   },
   fontSize: {
     small: 12,

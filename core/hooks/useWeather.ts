@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from 'react-query';
 
 type WeatherDataProps = {
   temperature: number | "";
@@ -8,33 +8,25 @@ type WeatherDataProps = {
   date: Date;
 };
 
+const fetchWeather = async (languageCode: string): Promise<WeatherDataProps> => {
+  const response = await fetch(
+    `http://api.weatherapi.com/v1/current.json?key=c9578687a50a434cae2135930230712&q=Yokohama&lang=${languageCode}&aqi=no`
+  );
+  const data = await response.json();
+
+  return {
+    temperature: data.current.temp_c,
+    weatherIcon: data.current.condition.icon,
+    type: data.current.condition.text,
+    code: data.current.condition.code,
+    date: data.current.last_updated,
+  };
+};
+
 export const useWeatherAPI = (languageCode: string) => {
-  const [weatherData, setWeatherData] = useState<WeatherDataProps>({
-    temperature: "",
-    weatherIcon: "",
-    type: "",
-    code: "",
-    date: new Date(),
+  const { data, isLoading, error } = useQuery(['weather', languageCode], () => fetchWeather(languageCode), {
+    enabled: !!languageCode, // Fetch only when languageCode is available
   });
 
-  useEffect(() => {
-    const fetchWeather = async () => {
-      const response = await fetch(
-        `http://api.weatherapi.com/v1/current.json?key=c9578687a50a434cae2135930230712&q=Yokohama&lang=${languageCode}&aqi=no`
-      );
-      const data = await response.json();
-
-      setWeatherData({
-        temperature: data.current.temp_c,
-        weatherIcon: data.current.condition.icon,
-        type: data.current.condition.text,
-        code: data.current.condition.code,
-        date: data.current.last_updated,
-      });
-    };
-
-    fetchWeather();
-  }, []);
-
-  return weatherData;
+  return { data, isLoading, error };
 };

@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TextStyle,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { format } from "date-fns";
@@ -29,6 +30,7 @@ export interface LeaveRequest {
   start_date: Date;
   end_date: Date;
   type: string;
+  number_of_days: number;
   status: "pending" | "approved" | "declined";
   details: string;
 }
@@ -68,6 +70,10 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
   const navigation = useNavigation<AppNavigationProp>();
   const headerHeight = useHeaderHeight();
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [
+    isRequestLeaveBottomSheetVisible,
+    setIsRequestLeaveBottomSheetVisible,
+  ] = useState<boolean>(false);
 
   // data
   const {
@@ -82,7 +88,8 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
       // Add your data fetching logic here.
       await refetchLeaveRequests();
     } catch (error) {
-      console.error("Error refreshing notifications", error);
+      // console.error("Error refreshing leave requests", error);
+      Alert.alert("Error refreshing leave requests");
     } finally {
       // Wait for 3 seconds before setting refreshing to false
       setTimeout(() => {
@@ -90,12 +97,6 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
       }, 2000);
     }
   }, [refetchLeaveRequests]);
-
-  // bottom sheet shift report form
-  const [
-    isRequestLeaveBottomSheetVisible,
-    setIsRequestLeaveBottomSheetVisible,
-  ] = useState<boolean>(false);
 
   // header options
   useLayoutEffect(() => {
@@ -183,7 +184,9 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
                     {formatDate(request.end_date, locale)}
                   </Text>
                 </View>
-                <Text style={styles.typeText}>{leave_type}</Text>
+                <Text style={styles.typeText}>{`${leave_type} (${
+                  request.number_of_days ? request.number_of_days : "0"
+                })`}</Text>
                 <Text style={getStatusStyle(request.status)}>{status}</Text>
               </View>
             );
@@ -238,7 +241,7 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
       <SafeAreaView
         style={[styles.container, { marginTop: headerHeight + 10 }]}
       >
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

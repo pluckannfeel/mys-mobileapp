@@ -20,3 +20,9 @@ export interface DeviceToken {
   staff_code: string;
   created_at?: Date;
 }
+
+export interface NotificationParams {
+  type: string;
+  screen: string;
+  params: { [key: string]: any }; // Adjust according to the actual structure
+}

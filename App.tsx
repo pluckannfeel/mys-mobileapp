@@ -5,7 +5,13 @@ import React, {
   useState,
 } from "react";
 
-import { StyleSheet, Text } from "react-native";
+import {
+  NavigationContainer,
+  NavigationProp,
+  useNavigation,
+  StackActions,
+} from "@react-navigation/native";
+import { Alert, BackHandler, StyleSheet, Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AppScreens from "./AppScreens";
 import AuthProvider from "./auth/contexts/AuthProvider";
@@ -26,6 +32,7 @@ import InProgressView from "./core/Components/InProgress";
 import { data as lottieFiles } from "./core/constants/lottieObjects";
 import ServerError from "./core/Components/ServerError";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import RNRestart from "react-native-restart";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,24 +58,44 @@ class ErrorBoundary extends Component<
   }
 
   static getDerivedStateFromError(_: Error): ErrorBoundaryState {
+    // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log the error to an error reporting service
     console.error("Error caught by Error Boundary:", error, errorInfo);
+    // You can also show the alert here if you want to capture additional info
+    // Or if you want to show the alert only on certain errors
+    this.showErrorAlert();
   }
+
+  showErrorAlert = () => {
+    Alert.alert(
+      "Unexpected Error",
+      "An error has occurred and the app needs to close.",
+      [
+        {
+          text: "OK",
+          onPress: () => {
+            console.log("restarting");
+            // Exiting the app is not recommended, but if you must do it, use BackHandler.exitApp()
+            // Note that this will not work on iOS as it is against Apple's guidelines.
+            RNRestart.restart();
+          },
+        },
+      ],
+      { cancelable: false } // Prevent the alert from being dismissible
+    );
+  };
 
   render() {
     if (this.state.hasError) {
-      // Render any custom fallback UI
-      return (
-        <ServerError
-        // source={lottieFiles[1].animation}
-        />
-      );
+      // You can use componentDidCatch to show the alert instead of rendering a new UI
+      return null; // Return null or a small empty component if you handle the error with an alert
     }
 
+    // Normally, just render children
     return this.props.children;
   }
 }
@@ -82,17 +109,17 @@ const App = () => {
             <React.Suspense fallback={<Loader />}>
               <SettingsProvider>
                 <AuthProvider>
-                  <WebSocketProvider>
-                    <SafeAreaProvider>
-                      <GestureHandlerRootView style={{ flex: 1 }}>
-                        <BottomSheetModalProvider>
-                          <SelectedShiftProvider>
-                            <AppScreens />
-                          </SelectedShiftProvider>
-                        </BottomSheetModalProvider>
-                      </GestureHandlerRootView>
-                    </SafeAreaProvider>
-                  </WebSocketProvider>
+                  {/* <WebSocketProvider> */}
+                  <SafeAreaProvider>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                      <BottomSheetModalProvider>
+                        <SelectedShiftProvider>
+                          <AppScreens />
+                        </SelectedShiftProvider>
+                      </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
+                  </SafeAreaProvider>
+                  {/* </WebSocketProvider> */}
                 </AuthProvider>
               </SettingsProvider>
             </React.Suspense>

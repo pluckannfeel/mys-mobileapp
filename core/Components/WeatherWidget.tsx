@@ -10,9 +10,7 @@ const WeatherWidget = () => {
   const { i18n } = useTranslation();
   const locale = i18n.language === "en" ? enUS : ja;
 
-  const { temperature, weatherIcon, type, code, date } = useWeatherAPI(
-    i18n.language
-  );
+  const { data: weatherData, isLoading, error } = useWeatherAPI(i18n.language);
 
   // Format the date to display as "Thu, Dec 7, 2023"
   const formattedDate = format(new Date(), "EEE, MMM d, yyyy", {
@@ -20,23 +18,28 @@ const WeatherWidget = () => {
   });
   return (
     <View style={styles.widgetContainer}>
-      {weatherIcon && (
+      {/* {isLoading ? (
+        <Text>Loading...</Text> // Or any other loading indicator
+      ) : (
+        <> */}
+      {weatherData?.weatherIcon && (
         <Image
-          source={{ uri: `https:${weatherIcon}` }}
-          //   source={mapWeatherCodeToIcon(code as number)}
+          source={{ uri: `https:${weatherData.weatherIcon}` }}
           style={styles.weatherIcon}
         />
       )}
       <View style={{ flex: 1, alignItems: "center" }}>
         <Text style={styles.temperatureText}>
-          {temperature}
+          {weatherData?.temperature}
           <Text style={styles.celsiusSymbol}>°C</Text>
         </Text>
       </View>
       <View style={styles.dateAndTypeContainer}>
         <Text style={styles.dateText}>{formattedDate}</Text>
-        <Text style={styles.weatherType}>{type}</Text>
+        <Text style={styles.weatherType}>{weatherData?.type}</Text>
       </View>
+      {/* </>
+      )} */}
     </View>
   );
 };
@@ -45,11 +48,13 @@ export default WeatherWidget;
 
 const styles = StyleSheet.create({
   widgetContainer: {
+    marginVertical: 5,
     paddingHorizontal: 20, // Horizontal padding
     backgroundColor: "#FFFFFF", // White background for the widget
     flexDirection: "row", // Elements in a row
+    // flexWrap: "wrap", // Wrap the elements if they overflow
     alignItems: "center", // Vertically center elements in the container
-    justifyContent: "space-between", // Space between the elements
+    justifyContent: "space-evenly", // Space between the elements
     padding: 10, // Padding inside the widget container
     borderRadius: 16, // Rounded corners
     shadowColor: "#000",
@@ -62,8 +67,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   weatherIcon: {
-    width: 80, // Sizable icon for visibility
-    height: 80,
+    width: 70, // Sizable icon for visibility
+    height: 70,
   },
   temperatureText: {
     fontSize: 50, // Adjust the font size accordingly
@@ -72,7 +77,7 @@ const styles = StyleSheet.create({
     lineHeight: Platform.OS === "ios" ? 50 : 100,
   },
   celsiusSymbol: {
-    fontSize: 25, // Smaller font size for the Celsius symbol
+    fontSize: 22, // Smaller font size for the Celsius symbol
     fontWeight: "300",
     color: "#000",
     lineHeight: Platform.OS === "ios" ? 25 : 100,

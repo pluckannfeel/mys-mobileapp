@@ -1,18 +1,23 @@
 // this component is using lottie for animation
 import React from "react";
-import { View, StyleSheet, Dimensions, Text } from "react-native";
+import { View, StyleSheet, Dimensions, Text, Pressable } from "react-native";
 // import LottieView, { AnimationObject } from "lottie-react-native";
 import { HEIGHT } from "../constants/dimensions";
 import { useTranslation } from "react-i18next";
+import { useQueryErrorResetBoundary } from "react-query";
+import { useNavigation, StackActions } from "@react-navigation/native";
+import { AppNavigationProp } from "../../AppScreens";
 
 // Update the type for the component's props
 type InProgressProps = {
   // source: AnimationObject | { uri: string } | string;
 };
 
-const ServerError: React.FC<InProgressProps> = ({ 
-  // source
- }) => {
+const ServerError: React.FC<InProgressProps> = (
+  {
+    // source
+  }
+) => {
   const { t } = useTranslation();
 
   return (
@@ -20,6 +25,15 @@ const ServerError: React.FC<InProgressProps> = ({
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       {/* <LottieView source={source} autoPlay loop style={styles.animation} /> */}
       <Text style={styles.text}>{t("common.serverError")}</Text>
+
+      <Pressable
+        style={styles.button}
+        onPress={() => {
+          // console.log("Retry");
+        }}
+      >
+        <Text> {t("common.retry")}</Text>
+      </Pressable>
     </View>
   );
 };
@@ -52,5 +66,15 @@ const styles = StyleSheet.create({
     // This ensures the text stays at the bottom of the animation
     position: "absolute",
     bottom: HEIGHT - 650, // Adjust this value to position the text correctly
+  },
+  button: {
+    // Add your button styles here
+    borderStyle: "solid",
+    fontSize: 30,
+    fontWeight: "bold",
+    borderWidth: 1.5,
+    borderColor: "black",
+    padding: 15,
+    borderRadius: 5,
   },
 });
