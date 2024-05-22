@@ -1,5 +1,12 @@
-import React, { useLayoutEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import React, { lazy, useEffect, useLayoutEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -7,35 +14,47 @@ import {
   DrawerContentComponentProps,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { NavigationContainer } from "@react-navigation/native";
-import HomeScreen from "./Home";
+import { StackActions, useNavigation } from "@react-navigation/native";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "../../core/contexts/ThemeProvider";
+import { theme } from "../../core/theme/theme";
+import { useTranslation } from "react-i18next";
+import { height } from "../../core/constants/dimensions";
+
+import { AppNavigationProp } from "../../AppScreens";
 import { UserInfo } from "../../auth/types/userInfo";
 import { useAuth } from "../../auth/contexts/AuthProvider";
-import ShiftScreen from "../../Shift/screens/Shift";
+import { Profile } from "../../Profile/types/profile";
+import { NotificationParams } from "../../Notifications/types/Notification";
 
-import { useNavigation, StackActions } from "@react-navigation/native";
-import { AppNavigationProp } from "../../AppScreens";
-import PayslipScreen from "../../Payslip/screens/Payslip";
+// import { useWebSocket } from "../../Notifications/contexts/WebSocketProvider";
+// import { useRegisterDeviceToken } from "../../Notifications/hooks/useRegisterDeviceToken";
+import { usePushNotifications } from "../../Notifications/hooks/usePushNotifications";
+
 import DocumentScreen from "../../Document/screens/Document";
-import ProfileScreen from "../../Profile/Screens/Profile";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { height } from "../../core/constants/dimensions";
-import { useTheme } from "../../core/contexts/ThemeProvider";
-import { useTranslation } from "react-i18next";
+import ProfileScreen from "../../Profile/screens/Profile";
+// import HomeScreen from "./Home";
+import HomeScreen from "./HomeV2";
+// import ShiftScreen from "../../Shift/screens/Shift";
 import LeaveRequestsScreen from "../../Shift/screens/LeaveRequests";
-import LeaveRequestBottomSheet from "../../Shift/Components/LeaveRequestBottomSheet";
+import EmergencyContactScreen from "../../Emergency_Contact/screens/EmergencyContacts";
+import LicenseScreen from "../../Licenses/screens/License";
+import TaxcertificateScreen from "../../Payslip/screens/Taxcertificate";
+import PayslipScreen from "../../Payslip/screens/Payslip";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Post } from "../types/post";
+import Loader from "../../core/Components/Loader";
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-  const { userInfo, logout } = useAuth();
+  const { isUserDataLoading, userInfo, logout } = useAuth();
   const navigation = useNavigation<AppNavigationProp>();
-
   const { t } = useTranslation();
 
   return (
     <DrawerContentScrollView
       {...props}
       style={styles.drawerContent}
-      contentContainerStyle={{ paddingBottom: height * 0.5 }}
+      contentContainerStyle={{ paddingBottom: height * 0.43 }}
     >
       <View style={styles.userInfoSection}>
         <View style={styles.userRow}>
@@ -94,33 +113,64 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 const Drawer = createDrawerNavigator();
 
 const MainScreen = () => {
-  const { userInfo } = useAuth();
+  const { isUserDataLoading, userInfo, refetchUserInfo } = useAuth();
   const navigation = useNavigation<AppNavigationProp>();
   const theme = useTheme();
   const { t } = useTranslation();
 
-  function HomeScreenWrapper() {
-    return <HomeScreen userInfo={userInfo!} />;
-  }
+  // useLayoutEffect(() => {
+  //   // Set the navigation header title
+  //   navigation.setOptions({
+  //     // title: "Home",
+  //     headtransparent: true,
+  //   });
+  // }, [navigation]);
 
-  useLayoutEffect(() => {
-    // Set the navigation header title
-    navigation.setOptions({
-      // title: "Home",
-      headtransparent: true,
-    });
-  }, [navigation]);
+  const HomeScreenWrapper = () => {
+    return (
+      <HomeScreen
+      // userInfo={userInfo as UserInfo}
+      // recentPosts={recentPosts as Post[]}
+      />
+    );
+  };
 
   const ProfileScreenWrapper = () => {
-    return <ProfileScreen userInfo={userInfo as UserInfo} />;
+    return (
+      <ProfileScreen
+        userInfo={{ ...userInfo } as Profile}
+        isDataLoading={isUserDataLoading}
+        refetchUserInfo={refetchUserInfo as () => void}
+      />
+    );
   };
 
-  const ShiftScreenWrapper = () => {
-    return <ShiftScreen userInfo={userInfo as UserInfo} />;
-  };
+  // const ShiftScreenWrapper = () => {
+  //   return <ShiftScreen userInfo={userInfo as UserInfo} />;
+  // };
 
   const LeaveRequestScreenWrapper = () => {
     return <LeaveRequestsScreen userInfo={userInfo as UserInfo} />;
+  };
+
+  const PayslipScreenWrapper = () => {
+    return <PayslipScreen userInfo={userInfo as UserInfo} />;
+  };
+
+  const TaxcertificateScreenWrapper = () => {
+    return <TaxcertificateScreen userInfo={userInfo as UserInfo} />;
+  };
+
+  const EmergencyContactWrapper = () => {
+    return <EmergencyContactScreen userInfo={userInfo as UserInfo} />;
+  };
+
+  // const DocumentScreenWrapper = () => {
+  //   return <DocumentScreen userInfo={userInfo as UserInfo} />;
+  // };
+
+  const LicenseScreenWrapper = () => {
+    return <LicenseScreen userInfo={userInfo as UserInfo} />;
   };
 
   return (
@@ -131,7 +181,7 @@ const MainScreen = () => {
     >
       <Drawer.Screen
         name="Home"
-        component={HomeScreenWrapper}
+        component={React.memo(HomeScreenWrapper)}
         options={{
           drawerLabel: t("admin.drawer.menu.home"),
           headerRight: () => (
@@ -147,46 +197,128 @@ const MainScreen = () => {
                 color={theme.colors.pink400}
                 style={{ marginRight: 15 }}
                 onPress={() => {
-                  navigation.navigate("Notifications")
+                  navigation.navigate("Notifications");
                 }}
               />
             </View>
           ),
+          headerTitle: () => (
+            <Image
+              source={require("../../assets/images/newlogo.png")} // Replace with the path to your image
+              style={{ width: 200, height: 26 }} // Adjust styling as needed
+              resizeMode="contain" // or 'cover', 'stretch', etc.
+            />
+          ),
+          headerTitleAlign: "center",
+          headerTransparent: true,
+        }}
+      />
+      {/* <Drawer.Screen
+        name="Shift"
+        component={React.memo(ShiftScreenWrapper)}
+        options={{ drawerLabel: t("admin.drawer.menu.shift") }}
+      /> */}
+      <Drawer.Screen
+        name="EmergencyContact"
+        component={React.memo(EmergencyContactWrapper)}
+        options={{
+          // lazy: false,
+          headerTransparent: true,
+          drawerLabel: t("admin.drawer.menu.emergencyContact"),
+          headerTitle: t("admin.drawer.menu.emergencyContact"),
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 24,
+          },
         }}
       />
       <Drawer.Screen
-        name="Shift"
-        component={ShiftScreenWrapper}
-        options={{ drawerLabel: t("admin.drawer.menu.shift") }}
-      />
-      <Drawer.Screen
         name="LeaveRequests"
-        component={LeaveRequestScreenWrapper}
+        component={React.memo(LeaveRequestScreenWrapper)}
         options={{
+          // lazy: false,
+          headerTransparent: true,
           drawerLabel: t("admin.drawer.menu.leaveRequests"),
           headerTitle: t("admin.drawer.menu.leaveRequests"),
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 24,
+          },
         }}
       />
       <Drawer.Screen
         name="Payslip"
-        component={PayslipScreen}
-        options={{ drawerLabel: t("admin.drawer.menu.payslip") }}
+        component={React.memo(PayslipScreenWrapper)}
+        options={{
+          // lazy: false,
+          headerTransparent: true,
+          drawerLabel: t("admin.drawer.menu.payslip"),
+          headerTitle: t("admin.drawer.menu.payslip"),
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 24,
+          },
+        }}
       />
+
+      <Drawer.Screen
+        name="Taxcertificate"
+        component={React.memo(TaxcertificateScreenWrapper)}
+        options={{
+          // lazy: false,
+          headerTransparent: true,
+          drawerLabel: t("admin.drawer.menu.taxcertificate"),
+          headerTitle: t("admin.drawer.menu.taxcertificate"),
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 24,
+          },
+        }}
+      />
+      {/* 
       <Drawer.Screen
         name="Document"
-        component={DocumentScreen}
-        options={{ drawerLabel: t("admin.drawer.menu.document") }}
+        component={React.memo(DocumentScreenWrapper)}
+        options={{ headerTitle: t("admin.drawer.menu.document") }}
+      /> */}
+
+      <Drawer.Screen
+        name="License"
+        component={React.memo(LicenseScreenWrapper)}
+        options={{
+          // lazy: false,
+          headerTransparent: true,
+          drawerLabel: t("admin.drawer.menu.licenses"),
+          headerTitle: t("admin.drawer.menu.licenses"),
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 24,
+          },
+        }}
       />
       <Drawer.Screen
         name="Profile"
-        component={ProfileScreenWrapper}
-        options={{ drawerLabel: t("admin.drawer.menu.profile") }}
+        component={React.memo(ProfileScreenWrapper)}
+        // options={{
+        //   headerTransparent: true,
+        //   headerTitle: t("admin.drawer.menu.profile"),
+        // }}
+        options={{
+          // lazy: false,
+          headerTransparent: true,
+          drawerLabel: t("admin.drawer.menu.profile"),
+          headerTitle: t("admin.drawer.menu.profile"),
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 24,
+          },
+        }}
       />
+
       {/* Add other screens here as needed */}
     </Drawer.Navigator>
   );
 };
-
 export default MainScreen;
 
 const styles = StyleSheet.create({
@@ -195,7 +327,7 @@ const styles = StyleSheet.create({
   },
   userInfoSection: {
     padding: 18,
-    backgroundColor: "#fb7185",
+    backgroundColor: theme.colors.pink500,
     marginBottom: 10,
   },
   userRow: {
@@ -214,14 +346,14 @@ const styles = StyleSheet.create({
     flex: 1, // Allows text to expand to the available space
   },
   userName: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
     color: "white",
     // This will truncate the text with an ellipsis if it's too long
     overflow: "hidden",
   },
   userEmail: {
-    fontSize: 14,
+    fontSize: 16,
     color: "white",
   },
   editButton: {
@@ -241,7 +373,9 @@ const styles = StyleSheet.create({
   },
   bottomDrawerSection: {
     position: "absolute", // Position absolutely
-    bottom: 0, // Anchor to the bottom
+    // bottom: 40, // Anchor to the bottom
+    // get the bottom position from the bottom of the screen
+    bottom: height * 0.05,
     width: "100%", // Make sure it spans the full width
     borderTopColor: "#f4f4f4",
     borderTopWidth: 1,

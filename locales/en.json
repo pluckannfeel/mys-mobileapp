@@ -6,12 +6,14 @@
     "confirmation": "Confirmation",
     "delete": "Delete",
     "view": "View",
+    "read": "Read",
     "edit": "Edit",
     "download": "Download File",
     "upload": "Upload File",
     "import": "Import File",
     "confirmImportMsg": "Do you want to import {{fileName}}?",
     "select": "Select File",
+    "save": "Save",
     "add": "Add",
     "remove": "Remove",
     "map": {
@@ -20,7 +22,13 @@
       }
     },
     "error": "Error",
-    "success": "Success"
+    "serverError": "Server Error, Contact Administrator.",
+    "success": "Success",
+    "permissionDenied": "Permission Denied",
+    "retry": "Retry"
+  },
+  "in_progress": {
+    "title": "Under Development"
   },
   "menu": {
     "shiftReport": "Show Shift Report",
@@ -28,18 +36,51 @@
     "listView": "List View",
     "dayOff": "Request Paid/Unpaid Leave"
   },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "form": {
+        "mysId": {
+          "label": "MYS ID",
+          "placeholder": "Please enter your MYS ID"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Please enter your password"
+        },
+        "actions": {
+          "login": "Sign In",
+          "forgotPassword": "Forgot your Password?"
+        }
+      },
+      "toast": {
+        "success": "Success",
+        "error": "Error",
+        "invalidCredentials": "Your MYS ID or Password is incorrect. Please try again.",
+        "serverError": "Error, Please contact Administrator."
+      }
+    }
+  },
   "admin": {
     "drawer": {
       "menu": {
+        "quickLinks": "Access",
+        "brandConcept": "MYS Brand Concept",
+        "latestNews": "Latest News",
+        "other": "Other",
         "home": "Home",
         "shift": "Shift Schedule",
         "payslip": "Payslip",
+        "taxcertificate": "Withholding Tax Slip",
         "document": "Documents",
         "profile": "Profile",
         "logout": "Logout",
         "settings": "Settings",
         "notifications": "Notifications",
-        "leaveRequests": "Leave Requests"
+        "leaveRequests": "Leave Requests",
+        "emergencyContact": "Emergency Contact",
+        "licenses": "My Licenses",
+        "news": "News"
       }
     },
     "header": {
@@ -188,6 +229,10 @@
       }
     }
   },
+  "upcomingShift": {
+    "title": "Upcoming Shift",
+    "empty": "No upcoming shift."
+  },
   "leaveRequest": {
     "screen": {
       "header": {
@@ -207,7 +252,8 @@
         },
         "from": "From",
         "until": "Until"
-      }
+      },
+      "empty": "No leave requests."
     },
     "form": {
       "label": "Request Paid/Unpaid Leave",
@@ -219,6 +265,9 @@
           "unpaid": "Unpaid"
         }
       },
+      "number_of_days": {
+        "label": "Number of Paid Days"
+      },
       "start_date": {
         "label": "Start Date"
       },
@@ -228,12 +277,220 @@
       "details": {
         "label": "Details",
         "placeholder": "Reason etc."
+      },
+      "error": {
+        "required": "This field is required",
+        "invalidDate": "Invalid Date"
       }
     },
     "notifications": {
       "addSuccessLeaveRequest": "Your Leave Request has been submitted.",
       "errorLeaveRequest": "Leave Request was not submitted. Contact Administrator.",
-      "existingLeaveRequest": "You already have a pending leave request."
+      "existingLeaveRequest": "You already have a pending leave request.",
+      "updateLeaveRequest": "Your Leave Request has been updated",
+      "approved": "approved.",
+      "declined": "declined."
+    }
+  },
+  "licenses": {
+    "form": {
+      "label": "Upload License",
+      "name": {
+        "label": "License Name"
+      },
+      "number": {
+        "label": "License Number"
+      },
+      "file": {
+        "label": "File",
+        "select": "Select File",
+        "change": "(1 File Selected) Change",
+        "options": {
+          "files": "Choose From Files",
+          "gallery": "Choose From Gallery",
+          "photo": "Take Photo"
+        }
+      },
+      "date_acquired": {
+        "label": "Date Acquired"
+      },
+      "actions": {
+        "add": "Add",
+        "save": "Save"
+      }
+    },
+    "screen": {
+      "header": {
+        "date": "Date Acquired",
+        "name": "Name",
+        "number": "Number",
+        "file": "File"
+      },
+      "empty": "No Licenses yet."
+    },
+    "notifications": {
+      "addSuccessLicense": "License has been added.",
+      "errorLicense": "License was not added. Contact Administrator.",
+      "existingLicense": "License already exists.",
+      "updateLicense": "License has been updated."
+    }
+  },
+  "payslip": {
+    "title": "Payslip",
+    "filter": {
+      "filterByYear": "Filter By"
+    },
+    "item": {
+      "netSalary": "Net Salary",
+      "totalDeduction": "Total Deduction",
+      "totalHoursWorked": "Total Hours Worked"
+    }
+  },
+  "profile": {
+    "form": {
+      "avatar": {
+        "label": "Image",
+        "actions": {
+          "label": "Upload Image",
+          "takePhoto": "Take Photo",
+          "selectFromGallery": "Select from Gallery",
+          "view": "View Image"
+        }
+      },
+      "english_name": {
+        "label": "English Name"
+      },
+      "japanese_name": {
+        "label": "Japanese Name"
+      },
+      "nickname": {
+        "label": "Nickname"
+      },
+      "phone_number": {
+        "label": "Phone Number"
+      },
+      "personal_email": {
+        "label": "Personal Email"
+      },
+      "work_email": {
+        "label": "Work Email"
+      },
+      "postal_code": {
+        "label": "Postal Code"
+      },
+      "address": {
+        "label": "Address"
+      },
+      "prefecture": {
+        "label": "Prefecture"
+      },
+      "municipality": {
+        "label": "City"
+      },
+      "town": {
+        "label": "Town"
+      },
+      "building": {
+        "label": "Building"
+      },
+      "bank_details": {
+        "label": "Bank Information"
+      },
+      "bank_jpbank_yuucho": {
+        "label": "JP Bank / Yuucho"
+      },
+      "customer_number": {
+        "label": "Customer Number"
+      },
+      "bank_name": {
+        "label": "Bank Name"
+      },
+      "branch_name": {
+        "label": "Branch Name"
+      },
+      "account_type": {
+        "label": "Account Type"
+      },
+      "account_number": {
+        "label": "Account Number",
+        "label2": "JP Bank Code Number"
+      },
+      "account_name": {
+        "label": "Account Name"
+      },
+      "card_image_front": {
+        "label": "Card Image (Front)"
+      },
+      "card_image_back": {
+        "label": "Card Image (Back)"
+      },
+      "foreigner": {
+        "label": "Foreigner"
+      },
+      "passport_details": {
+        "label": "Passport Details"
+      },
+      "passport_number": {
+        "label": "Passport No."
+      },
+      "passport_issue_date": {
+        "label": "Date Issued"
+      },
+      "passport_expiry_date": {
+        "label": "Date of Expiration"
+      },
+      "passport_image": {
+        "label": "Passport Photo"
+      },
+      "residence_card_details": {
+        "label": "Residence Card"
+      },
+      "residence_card_number": {
+        "label": "Residence Card No."
+      },
+      "residence_card_issue_date": {
+        "label": "Date Issued"
+      },
+      "residence_card_expiry_date": {
+        "label": "Date Expired"
+      },
+      "documents": {
+        "label": "Documents",
+        "type": {
+          "label": "Document Type",
+          "alert": {
+            "title": "No Document Type",
+            "message": "Please select a document type"
+          }
+        },
+        "options": {
+          "passport": "Passport",
+          "residence_card_front": "Residence Card (Front)",
+          "residence_card_back": "Residence Card (Back)",
+          "bank_card_front": "Bank Card (Front)",
+          "bank_card_back": "Bank Card (Back)"
+        },
+        "actions": {
+          "add": "Add Document (Image)",
+          "save": "Save Document",
+          "change": "Change Document"
+        }
+      }
+    },
+    "notifications": {
+      "updateSuccess": "Profile has been updated.",
+      "updateFailed": "Profile was not updated. Contact Administrator."
+    },
+    "actions": {
+      "save": "Save"
+    }
+  },
+  "emergencyContact": {
+    "title": "Emergency Contact",
+    "headers": {
+      "patient": "Patient",
+      "place": "Location",
+      "contact": "Contact"
     }
   },
   "settings": {
@@ -241,7 +498,8 @@
       "account": "Account",
       "general": "General",
       "help": "Help",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "logout": "Logout"
     },
     "generalSettings": {
       "headers": {
@@ -259,6 +517,37 @@
           "auto": "Auto"
         }
       }
+    },
+    "notificationSettings": {
+      "headers": {
+        "notifications": "Notifications"
+      },
+      "options": {
+        "general": {
+          "on": "On",
+          "off": "Off"
+        },
+        "openSettings": "Open Settings",
+        "guideMessage": "To change the notification settings for Mirai Care, open the device's Settings app. Navigate to 'Settings > Apps' (or 'Applications'), find 'Mirai Care', select it, then go to 'Notifications' and adjust your preferences accordingly."
+      }
+    }
+  },
+  "news": {
+    "title": "News",
+    "view": {
+      "empty": "No news yet.",
+      "viewMore": "View More"
+    }
+  },
+  "notificationsScreen": {
+    "tabs": {
+      "yourNotifications": "Your Notifications",
+      "news": "News"
+    },
+    "yourNotifications": {
+      "empty": "No notifications yet.",
+      "newPayslip": "New Payslip added.",
+      "newWithholdingTax": "New Withholding Tax was added."
     }
   }
 }

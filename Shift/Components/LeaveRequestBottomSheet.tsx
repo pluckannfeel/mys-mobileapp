@@ -34,7 +34,8 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
   onClose,
 }) => {
   // The snap points for the bottom sheet
-  const snapPoints = useMemo(() => ["40%", "75%", "90"], []);
+  // const snapPoints = useMemo(() => ["40%", "75%", "90"], []);
+  const snapPoints = useMemo(() => ["90"], []);
   const { t } = useTranslation();
 
   // get mys id to pass to the form
@@ -43,7 +44,7 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
 
   const processing = isAdding;
 
-  const submitReportHandler = (values: LeaveRequest) => {
+  const submitLeaveRequestHandler = (values: LeaveRequest) => {
     addLeaveRequest({
       ...values,
       mys_id: userInfo?.staff_code as string,
@@ -76,12 +77,16 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
             topOffset: 60,
           });
         }
+      })
+      .finally(() => {
+        onClose();
       });
   };
 
   return (
     <BottomSheet
-      index={isVisible ? 1 : -1}
+      // index={isVisible ? 1 : -1}
+      index={0}
       snapPoints={snapPoints}
       enablePanDownToClose={true}
       onClose={onClose}
@@ -95,10 +100,10 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
       {/* The content of the bottom sheet */}
       {/* <ShiftReportForm
         info={initialShiftReport as ShiftReport}
-        submitForm={submitReportHandler}
+        submitForm={submitLeaveRequestHandler}
       /> */}
       <LeaveRequestForm
-        submitForm={submitReportHandler}
+        submitForm={submitLeaveRequestHandler}
         leaveRequestData={{} as LeaveRequest}
       />
     </BottomSheet>

@@ -4,6 +4,7 @@ import { View, Image, StyleSheet, ImageSourcePropType } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { oneFourthHeight } from "../../core/constants/dimensions";
 
+
 type MainViewProps = {
   children: React.ReactNode;
 };
@@ -13,15 +14,15 @@ const MainView = ({ children }: MainViewProps) => {
     <View style={styles.container}>
       <StatusBar style="auto" />
 
-      <Image
+      {/* <Image
         style={styles.backgroundImage}
-        source={require("../../assets/images/light_bg.png")}
-      />
+        source={require("../../assets/images/login_bg.png")}
+      /> */}
 
       <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
-          source={require("../../assets/images/myslogowhite.png")}
+          source={require("../../assets/images/login_logo.png")}
         />
       </View>
 

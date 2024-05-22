@@ -1,61 +1,97 @@
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
-import React, { useLayoutEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
+import React, { useCallback, useLayoutEffect, useState } from "react";
 import { useNavigation, StackActions } from "@react-navigation/native";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { t } from "i18next";
 import { theme } from "../../core/theme/theme";
 import { AppNavigationProp } from "../../AppScreens";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../core/contexts/ThemeProvider";
+import { Notification } from "../types/Notification";
+import { formatDistanceToNow } from "date-fns";
+import { useDateLocale } from "../../core/hooks/useDateLocale";
+import { useNotifications } from "../hooks/useNotifications";
+import { useAuth } from "../../auth/contexts/AuthProvider";
+import { notificationsLinks } from "../helpers/constants";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import NewsScreen from "../components/News";
+import YourNotificationsScreen from "../components/YourNotifications";
+import { ScrollView } from "react-native-gesture-handler";
+import Loader from "../../core/Components/Loader";
 
-type Props = {};
+const Tab = createMaterialTopTabNavigator();
 
-const NotificationsScreen = (props: Props) => {
-  // get HeaderHeight
-  const headerHeight = useHeaderHeight();
+type NotificationProps = {};
+
+const NotificationsScreen = (props: NotificationProps) => {
   const navigation = useNavigation<AppNavigationProp>();
   const theme = useTheme();
   const { t, i18n } = useTranslation();
 
   useLayoutEffect(() => {
-    // if (!isLoading) {
     navigation.setOptions({
-      // title: t("admin.drawer.menu.shift"),
-      // headerTitle: ShiftHeaderTitle,
-      headerTransparent: true,
-      // headerTintColor: "#fff",
-      // headerTitleAlign: "left",
-
+      // headerTransparent: true,
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.dispatch(StackActions.pop());
+          }}
+        >
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={24}
+            color={theme.colors.primary}
+          />
+        </TouchableOpacity>
+      ),
       headerTitleStyle: {
         fontWeight: "bold",
-        fontSize: 24,
+        fontSize: 22,
       },
-
-      //   headerRight: () => (
-      //     <View style={{ flexDirection: "row", paddingRight: 5 }}>
-      //       <MaterialCommunityIcons
-      //         name={
-      //           // shiftViewType === "default"
-      //           //   ? "calendar-month-outline"
-      //           //   : "view-week"
-      //           "dots-vertical"
-      //         }
-      //         size={25}
-      //         color={theme.colors.primary}
-      //         style={{ marginRight: 10 }}
-      //         onPress={menuHandler}
-      //       />
-      //     </View>
-      //   ),
     });
-    // }
   }, [navigation]);
 
   return (
-    <SafeAreaView style={[styles.container, { marginTop: headerHeight + 10 }]}>
-      <Text>NotificationsScreen</Text>
-    </SafeAreaView>
+    <Tab.Navigator
+      screenOptions={{
+        swipeEnabled: false,
+        tabBarIndicatorStyle: {
+          backgroundColor: theme.colors.primary,
+        },
+        lazy: true,
+        lazyPlaceholder: () => <Loader />,
+        // tabBarActiveTintColor: "#e91e63",
+        tabBarLabelStyle: { fontSize: 16, fontWeight: "bold" },
+        tabBarStyle: {
+          borderTopWidth: 0,
+          shadowColor: "transparent",
+          elevation: 0,
+        },
+      }}
+    >
+      <Tab.Screen
+        name="YourNotifications"
+        component={YourNotificationsScreen}
+        options={{
+          tabBarLabel: t("notificationsScreen.tabs.yourNotifications"),
+        }}
+      />
+      <Tab.Screen
+        name="News"
+        component={NewsScreen}
+        options={{ tabBarLabel: t("notificationsScreen.tabs.news") }}
+      />
+    </Tab.Navigator>
   );
 };
 
@@ -63,8 +99,7 @@ export default NotificationsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // Your container styles
-    // paddingTop: headerHeight,
-    padding: 10,
+    flex: 1,
+    padding: 16,
   },
 });

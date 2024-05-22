@@ -46,6 +46,11 @@ const ShiftScheduleView: React.FC<ScheduleViewProps> = ({
 
     if (endTime === "00:00") endTime = "24:00";
 
+    const patient_or_service_details =
+              item.patient !== "nan"
+                ? item.patient
+                : item.service_details;
+
     return (
       <TouchableOpacity
         style={[styles.scheduleItem, itemStyles]}
@@ -60,7 +65,7 @@ const ShiftScheduleView: React.FC<ScheduleViewProps> = ({
           </Text>
         </View>
         <View style={styles.details}>
-          <Text style={[styles.patientText, itemStyles]}>{item.patient}</Text>
+          <Text style={[styles.patientText, itemStyles]}>{patient_or_service_details}</Text>
           <Text style={[styles.serviceTypeText, itemStyles]}>
             {item.service_type}
           </Text>
@@ -99,7 +104,8 @@ const styles = StyleSheet.create({
   },
   scheduleItem: {
     flexDirection: "row", // Align children in a row
-    justifyContent: "space-between", // Put space between the children
+    justifyContent: "space-evenly", // Put space between the children
+    flexWrap: "wrap", // Allow children to wrap to the next line
     alignItems: "center", // Center items vertically
     width: "100%",
     marginVertical: 5,
@@ -132,7 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   patientText: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
   },
   serviceTypeText: {

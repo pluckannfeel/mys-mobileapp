@@ -30,5 +30,5 @@ const login = async ({
 export function useLogin() {
   const { isLoading, mutateAsync } = useMutation(login);
 
-  return { isLoggingIn: isLoading, login: mutateAsync };
+  return { isLoggingIn: isLoading, login: mutateAsync, };
 }

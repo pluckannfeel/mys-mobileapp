@@ -1,30 +1,87 @@
 {
   "expo": {
-    "name": "mys-app",
+    "name": "Mirai Care",
     "slug": "mys-app",
-    "version": "1.0.0",
+    "version": "1.0.5",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/images/newicon.jpg",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/newsplash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "アプリは、写真の選択とアップロードのために、あなたの写真ライブラリへのアクセスを必要とします。これにより、あなたのプロフィール画像を更新して個人化したり、会社の要求に応じてドキュメントの画像をアップロードすることができます。",
+          "cameraPermission": "アプリは、表示写真を更新し、プロフィールを個人化するために、あなたのカメラへのアクセスが必要です。また、会社の要件に必要なドキュメントの写真を撮影しアップロードするためにも、カメラを使用できます。"
+        }
+      ],
+      "expo-secure-store",
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "アプリは、Face IDを使用して認証するために、あなたの顔のスキャンにアクセスする必要があります。",
+          "fingerprintPermission": "アプリは、指紋認証を使用して認証するために、あなたの指紋スキャンにアクセスする必要があります。"
+        }
+      ],
+      "expo-asset"
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          }
+        ]
+      },
+      "supportsTablet": false,
+      "infoPlist": {
+        "UIDeviceFamily": [
+          1
+        ],
+        "NSUserNotificationUsageDescription": "このアプリでは、今後の勤務スケジュールのリマインダーや新しい情報（スタッフの休暇申請の更新、新しい給与明細など）をプッシュ通知で送信するために通知の許可が必要です。",
+        "NSCameraUsageDescription": "アプリは、写真の選択とアップロードのために、あなたの写真ライブラリへのアクセスを必要とします。これにより、あなたのプロフィール画像を更新して個人化したり、会社の要求に応じてドキュメントの画像をアップロードすることができます。",
+        "NSPhotoLibraryUsageDescription": "アプリは、表示写真を更新し、プロフィールを個人化するために、あなたのカメラへのアクセスが必要です。また、会社の要件に必要なドキュメントの写真を撮影しアップロードするためにも、カメラを使用できます。"
+      },
+      "bundleIdentifier": "com.makeyousmile.app",
+      "icon": "./assets/images/newicon.jpg",
+      "buildNumber": "1.0"
     },
     "android": {
+      "permissions": [
+        "INTERNET"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "icon": "./assets/images/newicon.jpg",
+      "package": "com.makeyousmile.app",
+      "versionCode": 3,
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ab5c3a6b-e90c-4bda-9300-3d8f9c3e9fde"
+      }
     }
   }
 }

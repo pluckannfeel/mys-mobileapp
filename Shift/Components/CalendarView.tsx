@@ -63,6 +63,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   shifts,
 }) => {
   const { t, i18n } = useTranslation();
+  const [currentMonth, setCurrentMonth] = useState(
+    format(new Date(), "yyyy-MM")
+  );
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] =
     useState<boolean>(false);
@@ -100,18 +103,44 @@ const CalendarView: React.FC<CalendarViewProps> = ({
   //for calendar marked dates (from shift dates)
   const marked = useRef(getMarkedDates(agendaFormattedShifts));
 
-  const agendaItems = useMemo(
-    () => getAgendaList(agendaFormattedShifts),
-    [agendaFormattedShifts]
-  );
+  // const agendaItems = useMemo(
+  //   () => getAgendaList(agendaFormattedShifts),
+  //   [agendaFormattedShifts]
+  // );
+
+  const getAgendaList = useCallback((agendaItems: AgendaItems) => {
+    const result = [];
+    for (let day = 1; day <= 31; day++) {
+      const dateKey = `${currentMonth}-${day.toString().padStart(2, '0')}`;
+      if (agendaItems[dateKey]) {
+        result.push({
+          title: dateKey,
+          data: agendaItems[dateKey],
+        });
+      } else {
+        // If there are no items for this date, add an empty entry
+        result.push({
+          title: dateKey,
+          data: [],
+        });
+      }
+    }
+    return result;
+  }, [currentMonth, agendaFormattedShifts]);
+  
+  const memoizedAgendaItems = useMemo(() => getAgendaList(agendaFormattedShifts), [getAgendaList, agendaFormattedShifts]);
+  
 
   // const onDateChanged = useCallback((date, updateSource) => {
   //   console.log('ExpandableCalendarScreen onDateChanged: ', date, updateSource);
   // }, []);
 
-  // const onMonthChange = useCallback(({dateString}) => {
-  //   console.log('ExpandableCalendarScreen onMonthChange: ', dateString);
-  // }, []);
+  const onMonthChange = useCallback((date: DateData) => {
+    // console.log('ExpandableCalendarScreen onMonthChange: ', dateString);
+    const selectedMonth = date.dateString.substring(0, 7);
+    setCurrentMonth(selectedMonth);
+    // console.log(selectedMonth);
+  }, []);
 
   // Function to open the bottom sheet
   const handleOpen = () => {
@@ -157,9 +186,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       <CalendarProvider
         date={adjustedInitialDate}
         // onDateChanged={onDateChanged}
-
         // onMonthChange={onMonthChange}
-        showTodayButton
+        // showTodayButton
         disabledOpacity={0.6}
         theme={todayBtnTheme.current}
         // todayBottomMargin={16}
@@ -170,7 +198,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           {/* <ExpandableCalendar */}
           <Calendar
             // testID={testIDs.expandableCalendar.CONTAINER}
-            hideArrows
             // disableAllTouchEventsForDisabledDays
             // disableAllTouchEventsForInactiveDays
             // pagingEnabled={false} // Disable horizontal paging
@@ -178,7 +205,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({
             // hideArrows
             // disablePan
             // disableMonthChange
-            // enableSwipeMonths={false}
+            onMonthChange={onMonthChange}
+            enableSwipeMonths={true}
             // hideKnob
             // allowShadow
             // initialPosition={ExpandableCalendar.positions.OPEN}
@@ -190,18 +218,19 @@ const CalendarView: React.FC<CalendarViewProps> = ({
             theme={theme.current}
             firstDay={1}
             markedDates={marked.current}
-            // leftArrowImageSource={leftArrowIcon}
-            // rightArrowImageSource={rightArrowIcon}
+            leftArrowImageSource={leftArrowIcon}
+            rightArrowImageSource={rightArrowIcon}
             // animateScroll
             // closeOnDayPress={false}
           />
           {/* )} */}
           <AgendaList
-            sections={agendaItems}
+            sections={memoizedAgendaItems}
             renderItem={renderItem}
             // scrollToNextEvent
-            avoidDateUpdates
+            // avoidDateUpdates
             sectionStyle={styles.section}
+            markToday={true}
             // dayFormat={'yyyy-MM-d'}
           />
         </SafeAreaView>
@@ -221,8 +250,21 @@ const CalendarView: React.FC<CalendarViewProps> = ({
 
 export default CalendarView;
 
+const getDatesOfMonth = (year: number, month: number): Date[] => {
+  const dates: Date[] = [];
+  const date = new Date(year, month, 1);
+  while (date.getMonth() === month) {
+    dates.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+  return dates;
+};
+
+
 function getMarkedDates(agendaItems: AgendaItems) {
   const marked: MarkedDates = {};
+
+  // console.log(agendaItems);
 
   Object.keys(agendaItems).forEach((date) => {
     const itemsForDate = agendaItems[date];
@@ -237,15 +279,15 @@ function getMarkedDates(agendaItems: AgendaItems) {
 }
 
 // Function to transform agendaFormattedShifts to the format expected by AgendaList
-const getAgendaList = (agendaItems: AgendaItems) => {
-  // console.log(agendaItems)
-  return Object.keys(agendaItems).map((date) => {
-    return {
-      title: date,
-      data: agendaItems[date],
-    };
-  });
-};
+// const getAgendaList = (agendaItems: AgendaItems) => {
+//   // console.log(agendaItems)
+//   return Object.keys(agendaItems).map((date) => {
+//     return {
+//       title: date,
+//       data: agendaItems[date],
+//     };
+//   });
+// };
 
 const shiftToAgendaList = (
   shifts: ShiftSchedule[]
@@ -307,6 +349,9 @@ const styles = StyleSheet.create({
     color: theme.colors.pink500,
     fontSize: 16,
     textTransform: "capitalize",
+    // borderbottomWidth: 5,
+    // borderBottomColor: theme.colors.pink400,
+
   },
   container: {
     flex: 1,

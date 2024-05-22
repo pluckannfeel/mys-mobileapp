@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useCallback, useLayoutEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,8 @@ import {
   FlatList,
   SafeAreaView,
   TextStyle,
+  RefreshControl,
+  Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { format } from "date-fns";
@@ -21,12 +23,14 @@ import LeaveRequestBottomSheet from "../Components/LeaveRequestBottomSheet";
 import { useStaffLeaveRequests } from "../hooks/useStaffLeaveRequests";
 import { UserInfo } from "../../auth/types/userInfo";
 import Loader from "../../core/Components/Loader";
+import { ScrollView } from "react-native-gesture-handler";
 
 export interface LeaveRequest {
   id: string;
   start_date: Date;
   end_date: Date;
   type: string;
+  number_of_days: number;
   status: "pending" | "approved" | "declined";
   details: string;
 }
@@ -65,33 +69,50 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<AppNavigationProp>();
   const headerHeight = useHeaderHeight();
-
-  // data
-  const { isLoading, data: leaveRequests } = useStaffLeaveRequests(
-    userInfo.staff_code
-  );
-
-  // bottom sheet shift report form
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [
     isRequestLeaveBottomSheetVisible,
     setIsRequestLeaveBottomSheetVisible,
   ] = useState<boolean>(false);
+
+  // data
+  const {
+    isLoading,
+    data: leaveRequests,
+    refetch: refetchLeaveRequests,
+  } = useStaffLeaveRequests(userInfo.staff_code);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // Add your data fetching logic here.
+      await refetchLeaveRequests();
+    } catch (error) {
+      // console.error("Error refreshing leave requests", error);
+      Alert.alert("Error refreshing leave requests");
+    } finally {
+      // Wait for 3 seconds before setting refreshing to false
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+    }
+  }, [refetchLeaveRequests]);
 
   // header options
   useLayoutEffect(() => {
     // if (!isLoading) {
     navigation.setOptions(
       {
-        // title: t("admin.drawer.menu.shift"),
-        // headerTitle: ShiftHeaderTitle,
-        headerTransparent: true,
-        // headerTintColor: "#fff",
-        // headerTitleAlign: "left",
+        // title: t("admin.drawer.menu.leaveRequests"),
+        // headerTitle: t("admin.drawer.menu.leaveRequests"),
+        // headerTransparent: true,
+        // // headerTintColor: "#fff",
+        // // headerTitleAlign: "left",
 
-        headerTitleStyle: {
-          fontWeight: "bold",
-          fontSize: 24,
-        },
+        // headerTitleStyle: {
+        //   fontWeight: "bold",
+        //   fontSize: 24,
+        // },
 
         headerRight: () => (
           <View style={{ flexDirection: "row", paddingRight: 5 }}>
@@ -163,7 +184,9 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
                     {formatDate(request.end_date, locale)}
                   </Text>
                 </View>
-                <Text style={styles.typeText}>{leave_type}</Text>
+                <Text style={styles.typeText}>{`${leave_type} (${
+                  request.number_of_days ? request.number_of_days : "0"
+                })`}</Text>
                 <Text style={getStatusStyle(request.status)}>{status}</Text>
               </View>
             );
@@ -171,7 +194,7 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
         </View>
       ))
     ) : (
-      <Text style={styles.emptyState}>No Leave Requests</Text>
+      <Text style={styles.emptyState}>{t("leaveRequest.screen.empty")}</Text>
     );
   };
 
@@ -218,20 +241,26 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
       <SafeAreaView
         style={[styles.container, { marginTop: headerHeight + 10 }]}
       >
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View style={styles.requestHeader}>
+            <Text style={styles.dateColumnHeader}>
+              {t("leaveRequest.screen.header.date")}
+            </Text>
+            <Text style={styles.dateColumnHeader}>
+              {t("leaveRequest.screen.header.type")}
+            </Text>
+            <Text style={styles.dateColumnHeader}>
+              {t("leaveRequest.screen.header.status")}
+            </Text>
+          </View>
 
-        <View style={styles.requestHeader}>
-          <Text style={styles.dateColumnHeader}>
-            {t("leaveRequest.screen.header.date")}
-          </Text>
-          <Text style={styles.dateColumnHeader}>
-            {t("leaveRequest.screen.header.type")}
-          </Text>
-          <Text style={styles.dateColumnHeader}>
-            {t("leaveRequest.screen.header.status")}
-          </Text>
-        </View>
-        {renderGroupedItems()}
+          {renderGroupedItems()}
+        </ScrollView>
 
         {/* <FlatList
       data={leaveRequests as LeaveRequest[]}
