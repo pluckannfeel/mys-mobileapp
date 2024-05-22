@@ -1,13 +1,20 @@
 import React, { useLayoutEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { theme } from "../../core/theme/theme";
 import {
   ModeThemeProp,
   useSettings,
 } from "../../core/contexts/SettingsProvider";
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { AppNavigationProp } from "../../AppScreens";
 import { useTranslation } from "react-i18next";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Define the types for your settings options
 type SettingOption = {
@@ -27,14 +34,27 @@ const GeneralSettingsScreen: React.FC = () => {
   const navigation = useNavigation<AppNavigationProp>();
 
   useLayoutEffect(() => {
-    // Set the navigation header title
     navigation.setOptions({
-      //   title: "Home",
-      headerTitle: "",
-      //   headerTitleAlign: "center",
-      //   headerTransparent: true,
+      headerTransparent: true,
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.dispatch(StackActions.pop());
+          }}
+        >
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={24}
+            color={theme.colors.primary}
+          />
+        </TouchableOpacity>
+      ),
+      headerTitleStyle: {
+        fontWeight: "bold",
+        fontSize: 20,
+      },
     });
-  });
+  }, [navigation]);
 
   //   console.log(language, mode);
 
@@ -56,24 +76,24 @@ const GeneralSettingsScreen: React.FC = () => {
         },
       ],
     },
-    {
-      id: 2,
-      title: t("settings.generalSettings.headers.mode"),
-      options: [
-        {
-          value: "light",
-          label: t("settings.generalSettings.options.mode.light"),
-        },
-        {
-          value: "dark",
-          label: t("settings.generalSettings.options.mode.dark"),
-        },
-        {
-          value: "auto",
-          label: t("settings.generalSettings.options.mode.auto"),
-        },
-      ],
-    },
+    // {
+    //   id: 2,
+    //   title: t("settings.generalSettings.headers.mode"),
+    //   options: [
+    //     {
+    //       value: "light",
+    //       label: t("settings.generalSettings.options.mode.light"),
+    //     },
+    //     {
+    //       value: "dark",
+    //       label: t("settings.generalSettings.options.mode.dark"),
+    //     },
+    //     {
+    //       value: "auto",
+    //       label: t("settings.generalSettings.options.mode.auto"),
+    //     },
+    //   ],
+    // },
   ];
 
   const handleOptionChange = (settingId: number, option: string) => {
@@ -91,38 +111,40 @@ const GeneralSettingsScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.container}>
-      {settings.map((setting) => (
-        <View key={setting.id}>
-          <Text style={styles.settingTitle}>{setting.title}</Text>
-          {setting.options.map((option) => (
-            <TouchableOpacity
-              key={option.value}
-              style={styles.optionRow}
-              onPress={() => handleOptionChange(setting.id, option.value)}
-              activeOpacity={0.6}
-            >
-              <Text style={styles.optionLabel}>{option.label}</Text>
-              <RadioButton
-                isSelected={
-                  setting.id === 1
-                    ? language === option.value
-                    : mode === option.value
-                }
+    <SafeAreaView>
+      <View style={styles.container}>
+        {settings.map((setting) => (
+          <View key={setting.id}>
+            <Text style={styles.settingTitle}>{setting.title}</Text>
+            {setting.options.map((option) => (
+              <TouchableOpacity
+                key={option.value}
+                style={styles.optionRow}
                 onPress={() => handleOptionChange(setting.id, option.value)}
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
-      ))}
-    </View>
+                activeOpacity={0.6}
+              >
+                <Text style={styles.optionLabel}>{option.label}</Text>
+                <RadioButton
+                  isSelected={
+                    setting.id === 1
+                      ? language === option.value
+                      : mode === option.value
+                  }
+                  onPress={() => handleOptionChange(setting.id, option.value)}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+        ))}
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: 10,
+    // flex: 1,
+    // marginTop: 10,
   },
   settingTitle: {
     fontSize: 18,

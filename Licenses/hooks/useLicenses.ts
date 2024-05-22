@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { License } from "../types/Document";
+import { License } from "../../Document/types/Document";
 import { axiosInstance } from "../../api/server";
 
 const fetchLicenses = async (staff_code: string): Promise<License[]> => {

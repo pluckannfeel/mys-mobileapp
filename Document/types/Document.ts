@@ -1,5 +1,9 @@
+import { number } from "yup";
+
 export type License = {
   file: string | File;
   name: string;
-  date: string;
+  type?: string;
+  number: string;
+  date: Date;
 };

@@ -6,7 +6,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  KeyboardAvoidingView,
+  // KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
@@ -96,10 +96,10 @@ const ShiftReportForm: React.FC<ReportFormProps> = ({ submitForm, info }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <KeyboardAvoidingView
+    {/* <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
-    >
+    > */}
       <ScrollView
         style={styles.container}
         contentContainerStyle={{ paddingBottom: 160 }}
@@ -991,7 +991,7 @@ const ShiftReportForm: React.FC<ReportFormProps> = ({ submitForm, info }) => {
           </Text>
         </TouchableOpacity>
       </ScrollView>
-    </KeyboardAvoidingView>
+    {/* </KeyboardAvoidingView> */}
     </TouchableWithoutFeedback>
   );
 };

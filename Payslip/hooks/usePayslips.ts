@@ -10,6 +10,6 @@ const fetchPayslips = async (mys_id: string): Promise<Payslip[]> => {
 export function usePayslips(mys_id: string) {
   return useQuery(["payslips", mys_id], () => fetchPayslips(mys_id), {
     enabled: !!mys_id,
-    suspense: true,
+    // suspense: true,
   });
 }

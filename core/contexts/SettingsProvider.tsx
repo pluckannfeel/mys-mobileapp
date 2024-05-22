@@ -41,7 +41,9 @@ const SettingsProvider = ({ children }: SettingsProviderProps) => {
 
   useEffect(() => {
     i18n.changeLanguage(language);
-  }, [language]); // Add language as a dependency
+  }, [
+    
+  ]); // Add language as a dependency
 
   const changeLanguage = (newLanguage: string) => {
     setLanguage(newLanguage);

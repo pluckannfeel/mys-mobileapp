@@ -27,6 +27,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Payslip } from "../types/payslip";
 import PayslipItem from "../components/PayslipItem";
 import { getYear, parseISO } from "date-fns";
+import Empty from "../../core/Components/Empty";
+import Loader from "../../core/Components/Loader";
 
 type PayslipProps = {
   userInfo: UserInfo;
@@ -51,11 +53,22 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
 
   useEffect(() => {
     if (initialPayslips && initialPayslips.length > 0) {
-      const filteredPayslips = initialPayslips.filter((payslip) => {
-        const releaseYear = getYear(parseISO(payslip.release_date.toString()));
-        return releaseYear === selectedYear;
-      });
-      setPayslips(filteredPayslips);
+      const filteredAndSortedPayslips = initialPayslips
+        .filter((payslip) => {
+          const releaseYear = getYear(
+            parseISO(payslip.release_date.toString())
+          );
+          return releaseYear === selectedYear;
+        })
+        .sort((a, b) => {
+          // Sort by release_date in descending order (most recent first)
+          return (
+            parseISO(b.release_date.toString()).getTime() -
+            parseISO(a.release_date.toString()).getTime()
+          );
+        });
+
+      setPayslips(filteredAndSortedPayslips);
     }
   }, [selectedYear, initialPayslips]);
 
@@ -79,7 +92,7 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
         // Add your data fetching logic here.
         // await refetchLeaveRequests();
       } catch (error) {
-        console.error("Error refreshing notifications", error);
+        console.error("Error refreshing payslips", error);
       } finally {
         // Wait for 3 seconds before setting refreshing to false
         setTimeout(() => {
@@ -116,13 +129,13 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
     );
   };
 
-  return (
-    <React.Fragment>
-      <SafeAreaView
-        style={[styles.container, { marginTop: headerHeight + 10 }]}
-      >
-        <StatusBar style="dark" />
+  return isLoading ? (
+    <Loader />
+  ) : (
+    <SafeAreaView style={[styles.container, { marginTop: headerHeight + 10 }]}>
+      <StatusBar style="dark" />
 
+      {payslips.length > 0 ? (
         <FlatList
           data={payslips}
           refreshControl={
@@ -132,8 +145,10 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
           renderItem={({ item }) => <PayslipItem {...item} />}
           ListHeaderComponent={renderHeader} // Add the header component here
         />
-      </SafeAreaView>
-    </React.Fragment>
+      ) : (
+        <Empty label={t("common.empty")} />
+      )}
+    </SafeAreaView>
   );
 };
 

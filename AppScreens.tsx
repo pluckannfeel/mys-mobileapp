@@ -1,9 +1,10 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { lazy, useEffect, useLayoutEffect } from "react";
 import {
   NavigationContainer,
   NavigationProp,
   useNavigation,
   StackActions,
+  RouteProp,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "./auth/contexts/AuthProvider";
@@ -13,7 +14,7 @@ import ShiftScreen from "./Shift/screens/Shift";
 import SettingsScreen from "./Settings/screens/Settings";
 import HomeQuickActionsScreen from "./admin/screens/Home";
 import { UserInfo } from "./auth/types/userInfo";
-import MainScreen from "./admin/screens/MainDrawer";
+
 import GeneralSettingsScreen from "./Settings/Components/General";
 import { useTranslation } from "react-i18next";
 import LeaveRequestsScreen from "./Shift/screens/LeaveRequests";
@@ -27,6 +28,9 @@ import {
 import { usePushNotifications } from "./Notifications/hooks/usePushNotifications";
 import { Alert } from "react-native";
 import NotificationSettingsScreen from "./Settings/Components/NotificationSettings";
+import PostDetailsScreen from "./admin/components/PostDetails";
+import MainScreen from "./admin/screens/MainDrawer";
+import Loader from "./core/Components/Loader";
 
 // Define the root stack params
 export type RootStackParamList = {
@@ -37,12 +41,20 @@ export type RootStackParamList = {
 // Define the private stack params
 export type PrivateStackParamList = {
   Main: undefined;
+  Home: undefined;
   Shift: undefined;
+  Profile: undefined;
   Settings: undefined;
   GeneralSettings: undefined;
   LeaveRequests: undefined;
   Notifications: undefined;
   NotificationSettings: undefined;
+  License: undefined;
+  Payslip: undefined;
+  Taxcertificate: undefined;
+  EmergencyContact: undefined;
+  News: undefined;
+  PostDetails: undefined;
   // ... other private screens ...
 };
 
@@ -59,7 +71,7 @@ const PrivateStackScreen = () => {
   const navigation = useNavigation<AppNavigationProp>();
   const { t } = useTranslation();
 
-  const { isLoggingOut, logout, userInfo } = useAuth();
+  const { isLoggingOut, logout, userInfo, isUserDataLoading } = useAuth();
 
   const handleLogout = () => {
     logout()
@@ -78,6 +90,8 @@ const PrivateStackScreen = () => {
   function LeaveRequestsScreenWrapper() {
     return <LeaveRequestsScreen userInfo={userInfo as UserInfo} />;
   }
+
+  if (isUserDataLoading) return <Loader />;
 
   return (
     <PrivateStack.Navigator>
@@ -120,6 +134,15 @@ const PrivateStackScreen = () => {
         component={NotificationsScreen}
         options={{
           headerTitle: t("admin.drawer.menu.notifications"),
+          // headerTransparent: true,
+        }}
+      />
+      <PrivateStack.Screen
+        name="PostDetails"
+        component={PostDetailsScreen}
+        options={{
+          headerTransparent: true,
+          headerTitle: "",
         }}
       />
       {/* <PrivateStack.Screen name="Shift" component={ShiftScreen} /> */}
@@ -130,7 +153,7 @@ const PrivateStackScreen = () => {
 };
 
 const AppScreens = () => {
-  const { userInfo } = useAuth();
+  const { userInfo, isUserDataLoading } = useAuth();
 
   // register the device token here
   // const { deviceToken } = useWebSocket();
@@ -150,20 +173,23 @@ const AppScreens = () => {
         // console.log("device token saved ");
       });
     }
-  }, [expoPushToken, userInfo]);
+    // }, [expoPushToken, userInfo]);
+  }, []);
+
+  if (isRegistering || isUserDataLoading) {
+    return <Loader />;
+  }
 
   return (
-    <NavigationContainer>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        {userInfo ? (
-          // If the user is logged in, show the PrivateStack
-          <RootStack.Screen name="Private" component={PrivateStackScreen} />
-        ) : (
-          // If not logged in, show the LoginScreen
-          <RootStack.Screen name="Login" component={LoginScreen} />
-        )}
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      {userInfo ? (
+        // If the user is logged in, show the PrivateStack
+        <RootStack.Screen name="Private" component={PrivateStackScreen} />
+      ) : (
+        // If not logged in, show the LoginScreen
+        <RootStack.Screen name="Login" component={LoginScreen} />
+      )}
+    </RootStack.Navigator>
   );
 };
 

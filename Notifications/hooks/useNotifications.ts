@@ -11,6 +11,6 @@ const fetchNotifications = async (mys_id: string): Promise<Notification[]> => {
 export function useNotifications(mys_id: string) {
   return useQuery("notifications", () => fetchNotifications(mys_id), {
     enabled: !!mys_id,
-    suspense: false,
+    // suspense: false,
   });
 }

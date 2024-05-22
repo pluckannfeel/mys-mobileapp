@@ -1,17 +1,13 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Linking,
-  Alert,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
 import React from "react";
 import { Payslip } from "../types/payslip";
-import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { parseISO, format } from "date-fns";
 import { ja, enUS } from "date-fns/locale";
 import { useTranslation } from "react-i18next";
+
+import * as Linking from "expo-linking";
+import * as Sharing from "expo-sharing";
 
 // import RNFetchBlob from "rn-fetch-blob";
 
@@ -19,24 +15,52 @@ const PayslipItem = (payslip: Payslip) => {
   // Function to handle download
   const { t, i18n } = useTranslation();
 
-  const handleDownload = () => {
-    if (!payslip.file_url) {
-      console.error("File URL is not available.");
-      return;
-    }
+  // const handleDownload = () => {
+  //   if (!payslip.file_url) {
+  //     console.error("File URL is not available.");
+  //     return;
+  //   }
 
-    Alert.alert(
-      "Download Payslip",
-      "Do you want to download the payslip?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Download",
-          onPress: () => Linking.openURL(payslip.file_url as string),
-        },
-      ],
-      { cancelable: true }
-    );
+  //   Alert.alert(
+  //     "Download Payslip",
+  //     "Do you want to download the payslip?",
+  //     [
+  //       { text: "Cancel", style: "cancel" },
+  //       {
+  //         text: "Download",
+  //         onPress: () => Linking.openURL(payslip.file_url as string),
+  //       },
+  //     ],
+  //     { cancelable: true }
+  //   );
+  // };
+
+  const handleView = async (url: string) => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert("Error", "Unable to open URL");
+      }
+    } catch (error) {
+      console.error("An error occurred", error);
+      Alert.alert("Error", "Failed to open URL");
+    }
+  };
+
+  const handleShare = async (url: string) => {
+    try {
+      const isAvailable = await Sharing.isAvailableAsync();
+      if (isAvailable) {
+        await Sharing.shareAsync(url);
+      } else {
+        Alert.alert("Error", "Sharing is not available on this device");
+      }
+    } catch (error) {
+      console.error("An error occurred", error);
+      Alert.alert("Error", "Failed to share");
+    }
   };
 
   // Parse the ISO string into a Date object
@@ -49,20 +73,31 @@ const PayslipItem = (payslip: Payslip) => {
 
   return (
     <View style={styles.card}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>{`${year} ${monthName} `}</Text>
-        <TouchableOpacity onPress={handleDownload}>
-          <MaterialIcons name="file-download" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.details}>
+      <View style={styles.detailsContainer}>
+        <Text style={styles.headerText}>{`${year}${
+          i18n.language === "ja" ? "年" : ""
+        } ${monthName}`}</Text>
         <Text>{`${t("payslip.item.netSalary")}: ¥ ${payslip.net_salary}`}</Text>
         <Text>{`${t("payslip.item.totalDeduction")}: ¥ ${
-          payslip.net_salary
+          payslip.total_deduction
         }`}</Text>
         <Text>{`${t("payslip.item.totalHoursWorked")}: ${
-          payslip.net_salary
+          payslip.total_hours
         }`}</Text>
+      </View>
+      <View style={styles.iconsContainer}>
+        <TouchableOpacity
+          onPress={() => handleView(payslip.file_url as string)}
+          style={styles.iconButton}
+        >
+          <AntDesign name="eye" size={26} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleShare(payslip.file_url as string)}
+          style={styles.iconButton}
+        >
+          <FontAwesome name="share" size={24} color="black" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -71,29 +106,34 @@ const PayslipItem = (payslip: Payslip) => {
 export default PayslipItem;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // Add your styling here
-  },
   card: {
     margin: 10,
-    padding: 15,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     borderRadius: 5,
     backgroundColor: "#fff",
-    // Add shadows and other styling
+    flexDirection: "row", // Makes the card flex horizontally
+    justifyContent: "space-between", // Spaces out the columns
+    alignItems: "center", // Aligns items vertically
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
+  detailsContainer: {
+    flex: 0.8, // Takes 80% of the space, adjust as needed
+  },
+  iconsContainer: {
+    flex: 0.2, // Takes 20% of the space, adjust as needed
+    flexDirection: "column",
+    alignItems: "flex-end", // Center align the icons vertically
+    justifyContent: "flex-end", // Center align the icons horizontally
+  },
+  iconButton: {
+    // marginVertical: 10,  // Space between icons
+    padding: 10,
+    // backgroundColor: "red",
   },
   headerText: {
+    marginBottom: 10,
     fontSize: 18,
     fontWeight: "bold",
   },
-  details: {
-    // Style for details section
-  },
-  // Add more styles as needed
+  // Additional styles...
 });

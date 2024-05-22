@@ -29,7 +29,7 @@ type DocumentProps = {
 const DocumentScreen = ({ userInfo }: DocumentProps) => {
   const { t } = useTranslation();
 
-  const headerHeight = useHeaderHeight();
+  const headerHeight = useHeaderHeight(); 
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [isAddDocumentBottomSheetVisible, setIsAddDocumentBottomSheetVisible] =
     useState<boolean>(false);
@@ -67,17 +67,17 @@ const DocumentScreen = ({ userInfo }: DocumentProps) => {
         fontWeight: "bold",
         fontSize: 24,
       },
-      headerRight: () => (
-        <View style={{ flexDirection: "row", paddingRight: 5 }}>
-          <MaterialIcons
-            name={"post-add"}
-            size={25}
-            color={theme.colors.primary}
-            style={{ marginRight: 10 }}
-            onPress={() => setIsAddDocumentBottomSheetVisible(true)}
-          />
-        </View>
-      ),
+      // headerRight: () => (
+      //   <View style={{ flexDirection: "row", paddingRight: 5 }}>
+      //     <MaterialIcons
+      //       name={"post-add"}
+      //       size={25}
+      //       color={theme.colors.primary}
+      //       style={{ marginRight: 10 }}
+      //       onPress={() => setIsAddDocumentBottomSheetVisible(true)}
+      //     />
+      //   </View>
+      // ),
     });
   }, [navigation]);
 

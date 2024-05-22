@@ -12,7 +12,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  KeyboardAvoidingView,
+  // KeyboardAvoidingView,
   Platform,
   ScrollView,
   Image,
@@ -433,10 +433,7 @@ const Profileform: React.FC<ProfileProps> = ({
       ) : (
         // <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         // </TouchableWithoutFeedback>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-        >
+        <>
           <ScrollView
             style={styles.container}
             contentContainerStyle={{ paddingBottom: 160 }}
@@ -872,11 +869,6 @@ const Profileform: React.FC<ProfileProps> = ({
             </TouchableOpacity>
           </ScrollView>
 
-          {/* <PopupMenu
-  visible={menuVisible}
-  onClose={() => setMenuVisible(false)}
-  menuOptions={menuOptions}
-/> */}
           <CustomButtomSheetModal
             onClose={() => dismiss()}
             ref={bottomSheetModalRef}
@@ -994,7 +986,7 @@ const Profileform: React.FC<ProfileProps> = ({
             isVisible={isProfileViewVisible}
             onClose={() => setProfileViewVisible(false)}
           />
-        </KeyboardAvoidingView>
+        </>
       )}
     </>
   );

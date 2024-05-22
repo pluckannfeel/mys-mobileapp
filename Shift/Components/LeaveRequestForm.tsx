@@ -29,6 +29,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ReportRadioGroup from "./ReportRadioButton";
 import { leave_types } from "../helpers/pickerOptions";
 import { format } from "date-fns";
+import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
 
 interface LeaveRequestFormProps {
   submitForm: (values: LeaveRequest) => void;
@@ -40,6 +41,7 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
   leaveRequestData,
 }) => {
   const { t, i18n } = useTranslation();
+  const timeZone = "Asia/Tokyo";
 
   // for android only
   const [isStartDatePickerAndroidVisible, setStartDatePickerAndroidVisibility] =
@@ -97,14 +99,14 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        // behavior={Platform.OS === "ios" ? "padding" : "position"}
-        behavior={"padding"}
+      {/* <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "position"}
+        // behavior={"padding"}
         style={{ flex: 1 }}
-      >
+      > */}
         <ScrollView
           style={styles.container}
-          contentContainerStyle={{ paddingBottom: 160 }}
+          // contentContainerStyle={{ paddingBottom: 160 }}
         >
           <Text style={styles.note}>{t("leaveRequest.form.note")}</Text>
 
@@ -141,17 +143,21 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
                 mode="date"
                 value={formik.values.start_date}
                 maximumDate={new Date(2030, 12, 31)}
-                minimumDate={new Date(2020, 1, 1)}
+                minimumDate={new Date(2024, 1, 1)}
                 onChange={(event: DateTimePickerEvent, selectedDate) => {
                   // const {
                   //   type,
                   //   nativeEvent: { timestamp },
                   // } = event;
                   // setStartDatePickerVisible(Platform.OS === "ios");
-                  formik.setFieldValue(
-                    "start_date",
-                    selectedDate || formik.values.start_date
-                  );
+                  // formik.setFieldValue(
+                  //   "start_date",
+                  //   selectedDate || formik.values.start_date
+                  // );
+                  const timezoneDate = selectedDate
+                    ? zonedTimeToUtc(selectedDate, timeZone)
+                    : formik.values.start_date;
+                  formik.setFieldValue("start_date", timezoneDate);
                 }}
                 locale={currLanguage === "ja" ? "ja-JP" : "en-US"}
                 style={styles.dateFieldInput}
@@ -164,7 +170,13 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
                   }}
                   onPress={() => setStartDatePickerAndroidVisibility(true)}
                 >
-                  <Text>{format(formik.values.start_date, "yyyy/MM/dd")}</Text>
+                  {/* <Text>{format(formik.values.start_date, "yyyy/MM/dd")}</Text> */}
+                  <Text>
+                    {format(
+                      utcToZonedTime(formik.values.start_date, timeZone),
+                      "yyyy/MM/dd"
+                    )}
+                  </Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
                   isVisible={isStartDatePickerAndroidVisible}
@@ -206,10 +218,14 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
                 value={formik.values.end_date} // Make sure 'end_date' is part of your form's initial values
                 onChange={(event: DateTimePickerEvent, selectedDate) => {
                   // setEndDatePickerVisible(Platform.OS === "ios");
-                  formik.setFieldValue(
-                    "end_date",
-                    selectedDate || formik.values.end_date
-                  );
+                  // formik.setFieldValue(
+                  //   "end_date",
+                  //   selectedDate || formik.values.end_date
+                  // );
+                  const timezoneDate = selectedDate
+                    ? zonedTimeToUtc(selectedDate, timeZone)
+                    : formik.values.end_date;
+                  formik.setFieldValue("end_date", timezoneDate);
                 }}
                 style={styles.dateFieldInput}
               />
@@ -221,7 +237,13 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
                   }}
                   onPress={() => setEndDatePickerAndroidVisibility(true)}
                 >
-                  <Text>{format(formik.values.end_date, "yyyy/MM/dd")}</Text>
+                  {/* <Text>{format(formik.values.end_date, "yyyy/MM/dd")}</Text> */}
+                  <Text>
+                    {format(
+                      utcToZonedTime(formik.values.end_date, timeZone),
+                      "yyyy/MM/dd"
+                    )}
+                  </Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
                   isVisible={isEndDatePickerAndroidVisible}
@@ -261,6 +283,7 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
             </View>
             <TextInput
               numberOfLines={4}
+              autoFocus
               multiline
               placeholder={t("leaveRequest.form.details.placeholder")}
               style={[styles.dividerInput, { maxHeight: 120 }]}
@@ -280,11 +303,11 @@ const LeaveRequestForm: React.FC<LeaveRequestFormProps> = ({
             disabled={!formik.dirty && !formik.isSubmitting}
           >
             <Text style={styles.submitButtonText}>
-              {t("shift.shiftReport.form.actions.submitReport")}
+              {t("common.save")}
             </Text>
           </TouchableOpacity>
         </ScrollView>
-      </KeyboardAvoidingView>
+      {/* </KeyboardAvoidingView> */}
     </TouchableWithoutFeedback>
   );
 };

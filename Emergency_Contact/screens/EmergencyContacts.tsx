@@ -65,34 +65,34 @@ const EmergencyContactScreen = ({ userInfo }: EmergencyContactScreenProps) => {
   // console.log(emergencyContacts);
 
   // header options
-  useLayoutEffect(() => {
-    // if (!isLoading) {
-    navigation.setOptions(
-      {
-        // title: t("admin.drawer.menu.leaveRequests"),
-        headerTitle: t("admin.drawer.menu.emergencyContact"),
-        headerTransparent: true,
-        // headerTintColor: "#fff",
-        // headerTitleAlign: "left",
-        headerTitleStyle: {
-          fontWeight: "bold",
-          fontSize: 24,
-        },
-        // headerRight: () => (
-        //   <View style={{ flexDirection: "row", paddingRight: 5 }}>
-        //     <MaterialIcons
-        //       name={"post-add"}
-        //       size={25}
-        //       color={theme.colors.primary}
-        //       style={{ marginRight: 10 }}
-        //       onPress={() => setIsRequestLeaveBottomSheetVisible(true)}
-        //     />
-        //   </View>
-        // ),
-      }
-      //   });
-    );
-  }, [navigation]);
+  // useLayoutEffect(() => {
+  //   // if (!isLoading) {
+  //   navigation.setOptions(
+  //     {
+  //       // title: t("admin.drawer.menu.leaveRequests"),
+  //       headerTitle: t("admin.drawer.menu.emergencyContact"),
+  //       headerTransparent: true,
+  //       // headerTintColor: "#fff",
+  //       // headerTitleAlign: "left",
+  //       headerTitleStyle: {
+  //         fontWeight: "bold",
+  //         fontSize: 24,
+  //       },
+  //       // headerRight: () => (
+  //       //   <View style={{ flexDirection: "row", paddingRight: 5 }}>
+  //       //     <MaterialIcons
+  //       //       name={"post-add"}
+  //       //       size={25}
+  //       //       color={theme.colors.primary}
+  //       //       style={{ marginRight: 10 }}
+  //       //       onPress={() => setIsRequestLeaveBottomSheetVisible(true)}
+  //       //     />
+  //       //   </View>
+  //       // ),
+  //     }
+  //     //   });
+  //   );
+  // }, [navigation]);
 
   const renderEmergencyContacts = () => {
     if (emergencyContacts) {

@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { AppNavigationProp } from "../../AppScreens";
 import { useTranslation } from "react-i18next";
+import { theme } from "../../core/theme/theme";
 
 type SettingsOptionProps = {
   title: string;
@@ -42,44 +44,69 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onLogout }) => {
     navigation.navigate(option);
   };
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTransparent: true,
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.dispatch(StackActions.pop());
+          }}
+        >
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={24}
+            color={theme.colors.primary}
+          />
+        </TouchableOpacity>
+      ),
+      headerTitleStyle: {
+        fontWeight: "bold",
+        fontSize: 20,
+      },
+    });
+  }, [navigation]);
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.section}>
-        {/* <SettingsOption
+    <SafeAreaView>
+      <ScrollView style={styles.container}>
+        <View style={styles.section}>
+          {/* <SettingsOption
           title={t("settings.links.account")}
           iconName="person-outline"
           onPress={() => handlePressOption("Account")}
         /> */}
-        <SettingsOption
-          title={t("settings.links.general")}
-          iconName="settings-outline"
-          onPress={() => handlePressOption("GeneralSettings")}
-        />
-        {/* <SettingsOption
+          <SettingsOption
+            title={t("settings.links.general")}
+            iconName="settings-outline"
+            onPress={() => handlePressOption("GeneralSettings")}
+          />
+          {/* <SettingsOption
           title={t("settings.links.help")}
           iconName="help-circle-outline"
           onPress={() => handlePressOption("Help")}
         /> */}
-        <SettingsOption
-          title={t("settings.links.notifications")}
-          iconName="notifications-outline"
-          onPress={() => handlePressOption("NotificationSettings")}
-        />
-      </View>
-      <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
-        <Text style={styles.logoutText}>{t("settings.links.logout")}</Text>
-      </TouchableOpacity>
-    </ScrollView>
+          <SettingsOption
+            title={t("settings.links.notifications")}
+            iconName="notifications-outline"
+            onPress={() => handlePressOption("NotificationSettings")}
+          />
+        </View>
+        <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
+          <Text style={styles.logoutText}>{t("settings.links.logout")}</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
+    // flex: 1,
+    // backgroundColor: "#fff",
   },
   section: {
-    marginTop: 35,
+    // marginTop: 35,
   },
   option: {
     flexDirection: "row",

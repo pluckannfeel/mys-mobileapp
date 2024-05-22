@@ -44,7 +44,7 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
 
   const processing = isAdding;
 
-  const submitReportHandler = (values: LeaveRequest) => {
+  const submitLeaveRequestHandler = (values: LeaveRequest) => {
     addLeaveRequest({
       ...values,
       mys_id: userInfo?.staff_code as string,
@@ -100,10 +100,10 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
       {/* The content of the bottom sheet */}
       {/* <ShiftReportForm
         info={initialShiftReport as ShiftReport}
-        submitForm={submitReportHandler}
+        submitForm={submitLeaveRequestHandler}
       /> */}
       <LeaveRequestForm
-        submitForm={submitReportHandler}
+        submitForm={submitLeaveRequestHandler}
         leaveRequestData={{} as LeaveRequest}
       />
     </BottomSheet>

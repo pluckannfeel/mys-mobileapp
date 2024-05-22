@@ -18,6 +18,8 @@ import {
   MaterialIcons,
   MaterialCommunityIcons,
   Fontisto,
+  FontAwesome5,
+  Ionicons,
 } from "@expo/vector-icons";
 import { UserInfo } from "../../auth/types/userInfo";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,7 +31,7 @@ import { HEIGHT } from "../../core/constants/dimensions";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useTranslation } from "react-i18next";
 import { StatusBar } from "expo-status-bar";
-import WeatherWidget from "../../core/Components/WeatherWidget";
+// import WeatherWidget from "../../core/Components/WeatherWidget";
 import { useUpcomingShift } from "../../Shift/hooks/useUpcomingShift";
 import UpcomingShift from "../../Shift/Components/UpcomingShift";
 
@@ -128,7 +130,7 @@ const HomeScreen: React.FC<HomeProps> = ({ userInfo }) => {
         // title: t("admin.drawer.menu.home"),
         headerTitle: () => (
           <Image
-            source={require("../../assets/images/newheaderlogo.png")} // Replace with the path to your image
+            source={require("../../assets/images/newlogo.png")} // Replace with the path to your image
             style={{ width: 200, height: 26 }} // Adjust styling as needed
             resizeMode="contain" // or 'cover', 'stretch', etc.
           />
@@ -151,8 +153,8 @@ const HomeScreen: React.FC<HomeProps> = ({ userInfo }) => {
         <View style={styles.container}>
           {isInitialized && (
             <>
-              <WeatherWidget />
-              <UpcomingShift userInfo={userInfo} />
+              {/* <WeatherWidget /> */}
+              {/* <UpcomingShift userInfo={userInfo} /> */}
             </>
           )}
         </View>
@@ -164,7 +166,7 @@ const HomeScreen: React.FC<HomeProps> = ({ userInfo }) => {
         >
           <View style={styles.quickLinksWrapper}>
             <View style={styles.quickLinksContainer}>
-              <QuickLink
+              {/* <QuickLink
                 Icon={MaterialCommunityIcons}
                 iconProps={{
                   name: "calendar-clock-outline",
@@ -174,42 +176,18 @@ const HomeScreen: React.FC<HomeProps> = ({ userInfo }) => {
                 title={t("admin.drawer.menu.shift")}
                 backgroundColor="#fb7185"
                 onPress={() => navigation.navigate("Shift")}
-              />
+              /> */}
 
               <QuickLink
-                Icon={MaterialCommunityIcons}
+                Icon={Ionicons}
                 iconProps={{
-                  name: "credit-card",
+                  name: "wallet",
                   size: 26,
                   color: "white",
                 }}
                 title={t("admin.drawer.menu.payslip")}
                 backgroundColor="#22c55e"
                 onPress={() => navigation.navigate("Payslip")}
-              />
-
-              <QuickLink
-                Icon={MaterialCommunityIcons}
-                iconProps={{
-                  name: "license",
-                  size: 26,
-                  color: "white",
-                }}
-                title={t("admin.drawer.menu.licenses")}
-                backgroundColor="#9A2F7C"
-                onPress={() => navigation.navigate("License")}
-              />
-
-              <QuickLink
-                Icon={Fontisto}
-                iconProps={{
-                  name: "asterisk",
-                  size: 26,
-                  color: "white",
-                }}
-                title={t("admin.drawer.menu.emergencyContact")}
-                backgroundColor="#FF7A00"
-                onPress={() => navigation.navigate("EmergencyContact")}
               />
 
               <QuickLink
@@ -225,6 +203,42 @@ const HomeScreen: React.FC<HomeProps> = ({ userInfo }) => {
               />
 
               <QuickLink
+                Icon={FontAwesome5}
+                iconProps={{
+                  name: "money-check-alt",
+                  size: 20,
+                  color: "white",
+                }}
+                title={t("admin.drawer.menu.taxcertificate")}
+                backgroundColor="#B31B1B"
+                onPress={() => navigation.navigate("Taxcertificate")}
+              />
+
+              <QuickLink
+                Icon={MaterialCommunityIcons}
+                iconProps={{
+                  name: "license",
+                  size: 26,
+                  color: "white",
+                }}
+                title={t("admin.drawer.menu.licenses")}
+                backgroundColor="#FF7A00"
+                onPress={() => navigation.navigate("License")}
+              />
+
+              <QuickLink
+                Icon={Fontisto}
+                iconProps={{
+                  name: "asterisk",
+                  size: 26,
+                  color: "white",
+                }}
+                title={t("admin.drawer.menu.emergencyContact")}
+                backgroundColor="#495057"
+                onPress={() => navigation.navigate("EmergencyContact")}
+              />
+
+              {/* <QuickLink
                 Icon={MaterialCommunityIcons}
                 iconProps={{
                   name: "file-document",
@@ -234,7 +248,7 @@ const HomeScreen: React.FC<HomeProps> = ({ userInfo }) => {
                 title={t("admin.drawer.menu.document")}
                 backgroundColor="#ef4444"
                 onPress={() => navigation.navigate("Document")}
-              />
+              /> */}
             </View>
           </View>
         </BottomSheet>

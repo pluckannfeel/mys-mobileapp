@@ -7,11 +7,13 @@
     "delete": "削除",
     "edit": "編集",
     "view": "表示",
+    "read": "閲覧",
     "download": "ダウンロード",
     "upload": "アップロード",
     "import": "CSVインポート",
     "confirmImportMsg": "{{fileName}} をインポートしてもよろしいですか？",
     "select": "選択",
+    "save": "保存",
     "add": "追加",
     "remove": "削除",
     "map": {
@@ -22,6 +24,7 @@
     "error": "エラー",
     "serverError": "エラー, 管理者を連絡して下さい。",
     "success": "成功",
+    "empty": "記録なし",
     "permissionDenied": "権限がありません",
     "retry": "トップー戻る"
   },
@@ -56,9 +59,14 @@
   "admin": {
     "drawer": {
       "menu": {
+        "quickLinks": "アクセス",
+        "brandConcept": "MYSブランドコンセプト",
+        "latestNews": "お知らせ",
+        "other": "その他",
         "home": "ホーム",
         "shift": "シフト・業務日誌",
-        "payslip": "給料明細・源泉徴収票",
+        "payslip": "給料明細",
+        "taxcertificate": "源泉徴収票",
         "document": "雇用契約",
         "profile": "個人情報",
         "settings": "設定",
@@ -66,7 +74,7 @@
         "leaveRequests": "休日／有給申請",
         "logout": "ログアウト",
         "emergencyContact": "緊急連絡先",
-        "licenses": "自分の資格",
+        "licenses": "資格",
         "news": "お知らせ"
       }
     },
@@ -251,7 +259,8 @@
         },
         "from": "自",
         "until": "至"
-      }
+      },
+      "empty": "休暇申請はありません"
     },
     "form": {
       "label": "休暇申請",
@@ -288,6 +297,49 @@
       "updateLeaveRequest": "休日／有給申請が",
       "approved": "承認されました。",
       "declined": "拒否されました。"
+    }
+  },
+  "licenses": {
+    "form": {
+      "label": "資格追加",
+      "name": {
+        "label": "免許名"
+      },
+      "number": {
+        "label": "免許番号"
+      },
+      "file": {
+        "label": "ファイル",
+        "select": "ファイルをアップロード",
+        "change": "「1ファイル」変更",
+        "options": {
+          "files": "ファイルを選択",
+          "gallery": "ギャラリーから選択",
+          "photo": "写真を撮る"
+        }
+      },
+      "date_acquired": {
+        "label": "取得日"
+      },
+      "actions": {
+        "add": "追加",
+        "save": "保存"
+      }
+    },
+    "screen": {
+      "header": {
+        "date": "取得日",
+        "name": "免許名",
+        "number": "免許番号",
+        "file": "ファイル"
+      },
+      "empty": "資格情報はありません"
+    },
+    "notifications": {
+      "addSuccessLicense": "資格が追加されました",
+      "errorLicense": "資格が追加されませんでした",
+      "existingLicense": "資格が既に存在します",
+      "updateLicense": "資格が更新されました"
     }
   },
   "payslip": {
@@ -490,7 +542,19 @@
   "news": {
     "title": "お知らせ",
     "view": {
-      "empty": "お知らせがありません"
+      "empty": "お知らせがありません",
+      "viewMore": "詳しく見る"
+    }
+  },
+  "notificationsScreen": {
+    "tabs": {
+      "yourNotifications": "あなた宛",
+      "news": "ニュース"
+    },
+    "yourNotifications": {
+      "empty": "通知はありません",
+      "newPayslip": "新給料明細があります",
+      "newWithholdingTax": "新源泉徴収票があります"
     }
   }
 }

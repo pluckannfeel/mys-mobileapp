@@ -6,12 +6,14 @@
     "confirmation": "Confirmation",
     "delete": "Delete",
     "view": "View",
+    "read": "Read",
     "edit": "Edit",
     "download": "Download File",
     "upload": "Upload File",
     "import": "Import File",
     "confirmImportMsg": "Do you want to import {{fileName}}?",
     "select": "Select File",
+    "save": "Save",
     "add": "Add",
     "remove": "Remove",
     "map": {
@@ -62,9 +64,14 @@
   "admin": {
     "drawer": {
       "menu": {
+        "quickLinks": "Access",
+        "brandConcept": "MYS Brand Concept",
+        "latestNews": "Latest News",
+        "other": "Other",
         "home": "Home",
         "shift": "Shift Schedule",
         "payslip": "Payslip",
+        "taxcertificate": "Withholding Tax Slip",
         "document": "Documents",
         "profile": "Profile",
         "logout": "Logout",
@@ -245,7 +252,8 @@
         },
         "from": "From",
         "until": "Until"
-      }
+      },
+      "empty": "No leave requests."
     },
     "form": {
       "label": "Request Paid/Unpaid Leave",
@@ -279,9 +287,52 @@
       "addSuccessLeaveRequest": "Your Leave Request has been submitted.",
       "errorLeaveRequest": "Leave Request was not submitted. Contact Administrator.",
       "existingLeaveRequest": "You already have a pending leave request.",
-      "updateLeaveRequest": "Your Leave Request has been",
+      "updateLeaveRequest": "Your Leave Request has been updated",
       "approved": "approved.",
       "declined": "declined."
+    }
+  },
+  "licenses": {
+    "form": {
+      "label": "Upload License",
+      "name": {
+        "label": "License Name"
+      },
+      "number": {
+        "label": "License Number"
+      },
+      "file": {
+        "label": "File",
+        "select": "Select File",
+        "change": "(1 File Selected) Change",
+        "options": {
+          "files": "Choose From Files",
+          "gallery": "Choose From Gallery",
+          "photo": "Take Photo"
+        }
+      },
+      "date_acquired": {
+        "label": "Date Acquired"
+      },
+      "actions": {
+        "add": "Add",
+        "save": "Save"
+      }
+    },
+    "screen": {
+      "header": {
+        "date": "Date Acquired",
+        "name": "Name",
+        "number": "Number",
+        "file": "File"
+      },
+      "empty": "No Licenses yet."
+    },
+    "notifications": {
+      "addSuccessLicense": "License has been added.",
+      "errorLicense": "License was not added. Contact Administrator.",
+      "existingLicense": "License already exists.",
+      "updateLicense": "License has been updated."
     }
   },
   "payslip": {
@@ -484,7 +535,19 @@
   "news": {
     "title": "News",
     "view": {
-      "empty": "No news yet."
+      "empty": "No news yet.",
+      "viewMore": "View More"
+    }
+  },
+  "notificationsScreen": {
+    "tabs": {
+      "yourNotifications": "Your Notifications",
+      "news": "News"
+    },
+    "yourNotifications": {
+      "empty": "No notifications yet.",
+      "newPayslip": "New Payslip added.",
+      "newWithholdingTax": "New Withholding Tax was added."
     }
   }
 }

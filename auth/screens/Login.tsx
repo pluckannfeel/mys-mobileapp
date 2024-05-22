@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   TextInput,
   View,
   TouchableOpacity,
-  KeyboardAvoidingView,
+  // KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
+  Button,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -17,7 +20,9 @@ import LoadingButton from "../../core/Components/LoadingButton";
 import { useAuth } from "../contexts/AuthProvider";
 import { HEIGHT, WIDTH } from "../../core/constants/dimensions";
 import { useNavigation, StackActions } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import * as LocalAuthentication from "expo-local-authentication";
+import * as SecureStore from "expo-secure-store";
 
 // Define the shape of the form values
 interface Credentials {
@@ -34,9 +39,57 @@ const validationSchema = Yup.object({
 });
 
 const Login = () => {
-  const { isLoggingIn, login } = useAuth();
   const navigation = useNavigation();
+  const { isLoggingIn, login, loginWithBiometrics } = useAuth();
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  useEffect(() => {
+    const checkBiometricSupport = async () => {
+      const isSupported = await LocalAuthentication.hasHardwareAsync();
+      setIsBiometricSupported(isSupported);
+    };
+
+    checkBiometricSupport();
+  }, []);
+
+  const handleBiometricAuth = async () => {
+    const biometricAuthAvailable = await LocalAuthentication.isEnrolledAsync();
+    if (!biometricAuthAvailable) {
+      Alert.alert(
+        "Biometric record not found",
+        "Please set up your biometric authentication"
+      );
+      return;
+    }
+
+    const { success } = await LocalAuthentication
+      .authenticateAsync
+      //   {
+      //   promptMessage: "Authenticate",
+      //   fallbackLabel: "Use Passcode",
+      // }
+      ();
+
+    if (success) {
+      const credentials = await getCredentials();
+      if (credentials) {
+        // login(credentials.username, credentials.password);
+        loginWithBiometrics(credentials);
+      } else {
+        Alert.alert(
+          "Login Failed",
+          "To use biometric login, please login with your staff_code and password first."
+        );
+      }
+    }
+  };
+  const getCredentials = async () => {
+    const credentialsString = await SecureStore.getItemAsync(
+      "authkey_biometrics"
+    );
+    return credentialsString ? credentialsString : null;
+  };
 
   const handleLogin = (staff_code: string, password: string) => {
     login(staff_code, password);
@@ -49,80 +102,93 @@ const Login = () => {
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => handleLogin(values.staff_code, values.password),
+    onSubmit: (values) => {
+      Keyboard.dismiss();
+      handleLogin(values.staff_code, values.password);
+    },
   });
 
   return (
     <MainView>
-      <View></View>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboardView}
-        >
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={formik.handleChange("staff_code")}
-              value={formik.values.staff_code}
-              placeholder="Staff Code"
-              placeholderTextColor="gray"
+      {/* <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      > */}
+      <View style={styles.contentView}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            autoCapitalize="none"
+            onChangeText={formik.handleChange("staff_code")}
+            value={formik.values.staff_code}
+            placeholder="Staff Code"
+            placeholderTextColor="gray"
+          />
+        </View>
+        {formik.touched.staff_code && formik.errors.staff_code && (
+          <Text style={styles.errorText}>{formik.errors.staff_code}</Text>
+        )}
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            autoCapitalize="none"
+            onChangeText={formik.handleChange("password")}
+            value={formik.values.password}
+            placeholder="Password"
+            secureTextEntry={!passwordVisible}
+            placeholderTextColor="gray"
+          />
+          <TouchableOpacity
+            style={styles.togglePasswordVisibility}
+            onPress={() => setPasswordVisible(!passwordVisible)}
+          >
+            <Ionicons
+              name={passwordVisible ? "eye-off" : "eye"}
+              size={24}
+              color="gray"
             />
-          </View>
-          {formik.touched.staff_code && formik.errors.staff_code && (
-            <Text style={styles.errorText}>{formik.errors.staff_code}</Text>
-          )}
+          </TouchableOpacity>
+        </View>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={formik.handleChange("password")}
-              value={formik.values.password}
-              placeholder="Password"
-              secureTextEntry={!passwordVisible}
-              placeholderTextColor="gray"
+        {formik.touched.password && formik.errors.password && (
+          <Text style={styles.errorText}>{formik.errors.password}</Text>
+        )}
+
+        <View style={styles.fullWidth}>
+          <LoadingButton
+            onPress={() => formik.handleSubmit()}
+            label="Sign In"
+            loading={isLoggingIn}
+          />
+        </View>
+
+        {isBiometricSupported && (
+          // <Button
+          //   // title="Login with Biometrics"
+
+          //   onPress={handleBiometricAuth}
+          // />
+          <TouchableOpacity
+            style={styles.centerRow}
+            onPress={handleBiometricAuth}
+          >
+            <MaterialCommunityIcons
+              name="face-recognition"
+              size={45}
+              color="gray"
             />
-            <TouchableOpacity
-              style={styles.togglePasswordVisibility}
-              onPress={() => setPasswordVisible(!passwordVisible)}
-            >
-              <Ionicons
-                name={passwordVisible ? "eye-off" : "eye"}
-                size={24}
-                color="gray"
-              />
-            </TouchableOpacity>
-          </View>
-
-          {formik.touched.password && formik.errors.password && (
-            <Text style={styles.errorText}>{formik.errors.password}</Text>
-          )}
-
-          <View style={styles.fullWidth}>
-            <LoadingButton
-              onPress={() => formik.handleSubmit()}
-              label="Sign In"
-              loading={isLoggingIn}
-            />
-          </View>
-
-          {/* <View style={styles.centerRow}>
-            <Text>No Account yet? </Text>
-            <TouchableOpacity onPress={() => router.push("/pages/Register")}>
-              <Text style={styles.signUpText}>Sign up here.</Text>
-            </TouchableOpacity>
-          </View> */}
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+          </TouchableOpacity>
+        )}
+      </View>
+      {/* </KeyboardAvoidingView> */}
     </MainView>
   );
 };
 
 const styles = StyleSheet.create({
   // fullWidthHeight: {},
-  keyboardView: {
+  contentView: {
     width: WIDTH / 1.3, // Use the full width of the parent container
     // alignItems: 'center',
     flex: 1,
@@ -172,7 +238,7 @@ const styles = StyleSheet.create({
   centerRow: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 20, // Add some space above the 'No Account yet?' text
+    marginTop: 30, // Add some space above the 'No Account yet?' text
   },
   signUpText: {
     color: "#db2777",

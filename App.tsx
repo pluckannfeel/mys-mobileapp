@@ -11,7 +11,15 @@ import {
   useNavigation,
   StackActions,
 } from "@react-navigation/native";
-import { Alert, BackHandler, StyleSheet, Text } from "react-native";
+import {
+  Alert,
+  BackHandler,
+  KeyboardAvoidingView,
+  // KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AppScreens from "./AppScreens";
 import AuthProvider from "./auth/contexts/AuthProvider";
@@ -26,20 +34,22 @@ import i18n from "./core/config/i18n";
 import SelectedShiftProvider from "./Shift/contexts/SelectedShiftProvider";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "./core/config/toast";
-import { WebSocketProvider } from "./Notifications/contexts/WebSocketProvider";
+// import { WebSocketProvider } from "./Notifications/contexts/WebSocketProvider";
 import { NetworkProvider } from "./core/contexts/NetworkProvider";
-import InProgressView from "./core/Components/InProgress";
-import { data as lottieFiles } from "./core/constants/lottieObjects";
-import ServerError from "./core/Components/ServerError";
+// import InProgressView from "./core/Components/InProgress";
+// import { data as lottieFiles } from "./core/constants/lottieObjects";
+// import ServerError from "./core/Components/ServerError";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import RNRestart from "react-native-restart";
+import { MenuProvider } from "react-native-popup-menu";
+import * as SecureStore from "expo-secure-store";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: 0,
-      suspense: true,
+      // retry: 0,
+      // suspense: true,
     },
   },
 });
@@ -64,10 +74,10 @@ class ErrorBoundary extends Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log the error to an error reporting service
-    console.error("Error caught by Error Boundary:", error, errorInfo);
-    // You can also show the alert here if you want to capture additional info
-    // Or if you want to show the alert only on certain errors
-    this.showErrorAlert();
+    // console.error("Error caught by Error Boundary:", error, errorInfo);
+    // // You can also show the alert here if you want to capture additional info
+    // // Or if you want to show the alert only on certain errors
+    // this.showErrorAlert();
   }
 
   showErrorAlert = () => {
@@ -101,31 +111,50 @@ class ErrorBoundary extends Component<
 }
 
 const App = () => {
+  // delete authKey
+
   return (
     <NetworkProvider>
-      <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <I18nextProvider i18n={i18n}>
-            <React.Suspense fallback={<Loader />}>
-              <SettingsProvider>
+      {/* <ErrorBoundary> */}
+      <QueryClientProvider client={queryClient}>
+        <I18nextProvider i18n={i18n}>
+          <React.Suspense fallback={<Loader />}>
+            <SettingsProvider>
+              <MenuProvider
+                customStyles={{
+                  backdrop: {
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  },
+                }}
+              >
                 <AuthProvider>
                   {/* <WebSocketProvider> */}
                   <SafeAreaProvider>
                     <GestureHandlerRootView style={{ flex: 1 }}>
                       <BottomSheetModalProvider>
                         <SelectedShiftProvider>
-                          <AppScreens />
+                          <KeyboardAvoidingView
+                            behavior={
+                              Platform.OS === "ios" ? "padding" : "height"
+                            }
+                            style={{ flex: 1 }}
+                          >
+                            <NavigationContainer>
+                              <AppScreens />
+                            </NavigationContainer>
+                          </KeyboardAvoidingView>
                         </SelectedShiftProvider>
                       </BottomSheetModalProvider>
                     </GestureHandlerRootView>
                   </SafeAreaProvider>
                   {/* </WebSocketProvider> */}
                 </AuthProvider>
-              </SettingsProvider>
-            </React.Suspense>
-          </I18nextProvider>
-        </QueryClientProvider>
-      </ErrorBoundary>
+              </MenuProvider>
+            </SettingsProvider>
+          </React.Suspense>
+        </I18nextProvider>
+      </QueryClientProvider>
+      {/* </ErrorBoundary> */}
       <Toast config={toastConfig} />
     </NetworkProvider>
   );

@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Keyboard,
-  KeyboardAvoidingView,
+  // KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
 } from "react-native";
@@ -40,11 +40,13 @@ const UserProfileSchema = Yup.object().shape({
 
 type ProfileScreenProps = {
   userInfo: Profile;
+  isDataLoading: boolean;
   refetchUserInfo: () => void;
 };
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({
   userInfo,
+  isDataLoading,
   refetchUserInfo,
 }) => {
   const { t } = useTranslation();
@@ -55,6 +57,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const { isUpdating, updateProfile } = useUpdateProfile();
 
   const { isAdding, addDocument } = useAddDocument();
+
+  const processing = isDataLoading || isUpdating || isAdding;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -127,23 +131,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     documentType,
     documentImage,
   }: AddDocumentProps) => {
-    console.log(documentType, documentImage);
+    // console.log(documentType, documentImage);
     addDocument({ staff_id, documentType, documentImage });
   };
 
   // console.log(userInfo)
 
-  return isUpdating || isAdding ? (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        // backgroundColor: theme.colors.secondary,
-      }}
-    >
-      <ActivityIndicator size="large" color={theme.colors.primary} />
-    </View>
+  return processing ? (
+    <Loader />
   ) : (
     // <Loader />
     <Profileform

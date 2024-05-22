@@ -12,9 +12,10 @@ import {
   ModeThemeProp,
   useSettings,
 } from "../../core/contexts/SettingsProvider";
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { AppNavigationProp } from "../../AppScreens";
 import { useTranslation } from "react-i18next";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Define the types for your settings options
 type SettingOption = {
@@ -33,16 +34,39 @@ const NotificationSettingsScreen: React.FC = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<AppNavigationProp>();
 
-  useLayoutEffect(() => {
-    // Set the navigation header title
-    navigation.setOptions({
-      //   title: "Home",
-      headerTitle: "",
+  // useLayoutEffect(() => {
+  //   // Set the navigation header title
+  //   navigation.setOptions({
+  //     //   title: "Home",
+  //     headerTitle: "",
 
-      //   headerTitleAlign: "center",
+  //     //   headerTitleAlign: "center",
+  //     headerTransparent: true,
+  //   });
+  // });
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
       headerTransparent: true,
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.dispatch(StackActions.pop());
+          }}
+        >
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={24}
+            color={theme.colors.primary}
+          />
+        </TouchableOpacity>
+      ),
+      headerTitleStyle: {
+        fontWeight: "bold",
+        fontSize: 20,
+      },
     });
-  });
+  }, [navigation]);
 
   //   console.log(language, mode);
 

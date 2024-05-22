@@ -104,15 +104,15 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
     navigation.setOptions(
       {
         // title: t("admin.drawer.menu.leaveRequests"),
-        headerTitle: t("admin.drawer.menu.leaveRequests"),
-        headerTransparent: true,
-        // headerTintColor: "#fff",
-        // headerTitleAlign: "left",
+        // headerTitle: t("admin.drawer.menu.leaveRequests"),
+        // headerTransparent: true,
+        // // headerTintColor: "#fff",
+        // // headerTitleAlign: "left",
 
-        headerTitleStyle: {
-          fontWeight: "bold",
-          fontSize: 24,
-        },
+        // headerTitleStyle: {
+        //   fontWeight: "bold",
+        //   fontSize: 24,
+        // },
 
         headerRight: () => (
           <View style={{ flexDirection: "row", paddingRight: 5 }}>
@@ -194,7 +194,7 @@ const LeaveRequestsScreen: React.FC<LeaveRequestScreenProps> = ({
         </View>
       ))
     ) : (
-      <Text style={styles.emptyState}>No Leave Requests</Text>
+      <Text style={styles.emptyState}>{t("leaveRequest.screen.empty")}</Text>
     );
   };
 
