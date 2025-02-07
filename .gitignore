@@ -11,6 +11,7 @@ web-build/
 # builds
 ios/
 android/
+ios old/
 
 # Native
 *.orig.*

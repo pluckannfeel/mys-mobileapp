@@ -33,7 +33,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { useTranslation } from "react-i18next";
 import { StatusBar } from "expo-status-bar";
 import PayslipScreen from "../../Payslip/screens/Payslip";
-import ProfileScreen from "../../Profile/screens/Profile";
+import ProfileScreen from "../../Profile/screens fix/Profile";
 import { Profile } from "../../Profile/types/profile";
 import QuickLinks from "../components/QuickLinks";
 import LatestNewsWidget from "../../core/Components/LatestNewsWidget";

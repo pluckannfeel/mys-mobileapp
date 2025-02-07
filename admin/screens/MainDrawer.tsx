@@ -32,7 +32,7 @@ import { NotificationParams } from "../../Notifications/types/Notification";
 import { usePushNotifications } from "../../Notifications/hooks/usePushNotifications";
 
 import DocumentScreen from "../../Document/screens/Document";
-import ProfileScreen from "../../Profile/screens/Profile";
+import ProfileScreen from "../../Profile/screens fix/Profile";
 // import HomeScreen from "./Home";
 import HomeScreen from "./HomeV2";
 // import ShiftScreen from "../../Shift/screens/Shift";
