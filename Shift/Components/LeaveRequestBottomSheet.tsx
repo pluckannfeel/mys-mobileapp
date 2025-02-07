@@ -13,6 +13,8 @@ import { LeaveRequest } from "../types/LeaveRequest";
 import { useAddLeaveRequest } from "../hooks/useAddLeaveRequest";
 import { useUserInfo } from "../../auth/hooks/useUserInfo";
 import { useAuth } from "../../auth/contexts/AuthProvider";
+import { useEditLeaveRequest } from "../hooks/useEditLeaveRequest";
+import { useDeleteLeaveRequest } from "../hooks/useDeleteLeaveRequest";
 
 // Create a type for the ref object
 export type BottomSheetRef = {
@@ -25,6 +27,7 @@ interface LeaveRequestBottomSheetProps {
   // onSubmit: (values: ShiftReport) => void;
   isVisible: boolean;
   onClose: () => void;
+  leaveRequestData: LeaveRequest;
 }
 
 const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
@@ -32,6 +35,7 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
   // onSubmit,
   isVisible,
   onClose,
+  leaveRequestData,
 }) => {
   // The snap points for the bottom sheet
   // const snapPoints = useMemo(() => ["40%", "75%", "90"], []);
@@ -41,46 +45,87 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
   // get mys id to pass to the form
   const { userInfo } = useAuth();
   const { isAdding, addLeaveRequest } = useAddLeaveRequest();
+  const { isEditing, editLeaveRequest } = useEditLeaveRequest();
+  
 
-  const processing = isAdding;
+  const processing = isAdding || isEditing;
 
-  const submitLeaveRequestHandler = (values: LeaveRequest) => {
-    addLeaveRequest({
-      ...values,
-      mys_id: userInfo?.staff_code as string,
-    })
-      .then((data) => {
-        Toast.show({
-          type: "success",
-          text1: t("common.success"),
-          text2: t("leaveRequest.notifications.addSuccessLeaveRequest"),
-          visibilityTime: 4000,
-          topOffset: 60,
+  const submitLeaveRequestHandler = (values: LeaveRequest, isEdit: boolean) => {
+    if (isEdit) {
+      editLeaveRequest({
+        ...values,
+        mys_id: userInfo?.staff_code as string,
+      })
+        .then((data) => {
+          Toast.show({
+            type: "success",
+            text1: t("common.success"),
+            text2: t("leaveRequest.notifications.editSuccessLeaveRequest"),
+            visibilityTime: 4000,
+            topOffset: 60,
+          });
+        })
+        .catch((error) => {
+          const detail = error.response.data.detail;
+          if (detail === "pending_leave_request") {
+            Toast.show({
+              type: "error",
+              text1: t("common.error"),
+              text2: t("leaveRequest.notifications.existingLeaveRequest"),
+              visibilityTime: 8000,
+              topOffset: 60,
+            });
+          } else {
+            Toast.show({
+              type: "error",
+              text1: t("common.error"),
+              text2: t("leaveRequest.notifications.errorLeaveRequest"),
+              visibilityTime: 3000,
+              topOffset: 60,
+            });
+          }
+        })
+        .finally(() => {
+          onClose();
         });
+    } else {
+      addLeaveRequest({
+        ...values,
+        mys_id: userInfo?.staff_code as string,
       })
-      .catch((error) => {
-        const detail = error.response.data.detail;
-        if (detail === "pending_leave_request") {
+        .then((data) => {
           Toast.show({
-            type: "error",
-            text1: t("common.error"),
-            text2: t("leaveRequest.notifications.existingLeaveRequest"),
-            visibilityTime: 8000,
+            type: "success",
+            text1: t("common.success"),
+            text2: t("leaveRequest.notifications.addSuccessLeaveRequest"),
+            visibilityTime: 4000,
             topOffset: 60,
           });
-        } else {
-          Toast.show({
-            type: "error",
-            text1: t("common.error"),
-            text2: t("leaveRequest.notifications.errorLeaveRequest"),
-            visibilityTime: 3000,
-            topOffset: 60,
-          });
-        }
-      })
-      .finally(() => {
-        onClose();
-      });
+        })
+        .catch((error) => {
+          const detail = error.response.data.detail;
+          if (detail === "pending_leave_request") {
+            Toast.show({
+              type: "error",
+              text1: t("common.error"),
+              text2: t("leaveRequest.notifications.existingLeaveRequest"),
+              visibilityTime: 8000,
+              topOffset: 60,
+            });
+          } else {
+            Toast.show({
+              type: "error",
+              text1: t("common.error"),
+              text2: t("leaveRequest.notifications.errorLeaveRequest"),
+              visibilityTime: 3000,
+              topOffset: 60,
+            });
+          }
+        })
+        .finally(() => {
+          onClose();
+        });
+    }
   };
 
   return (
@@ -104,7 +149,7 @@ const LeaveRequestBottomSheet: React.FC<LeaveRequestBottomSheetProps> = ({
       /> */}
       <LeaveRequestForm
         submitForm={submitLeaveRequestHandler}
-        leaveRequestData={{} as LeaveRequest}
+        leaveRequestData={leaveRequestData as LeaveRequest}
       />
     </BottomSheet>
   );

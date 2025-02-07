@@ -2,9 +2,10 @@ import React from "react";
 import { Platform, View, StyleProp, ViewStyle } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Picker } from "@react-native-picker/picker";
+// import { SelectList } from "react-native-dropdown-select-list";
 
 interface FilterSelectProps {
-  items: { label: string; value: number }[];
+  items: { key: string; value: number }[];
   onValueChange: (value: number, name: string) => void;
   label: string;
   value?: number;
@@ -16,6 +17,7 @@ interface FilterSelectProps {
 const pickerSelectStyles = {
   inputIOS: {
     fontSize: 20,
+    // backgroundColor: "white",
     flex: 1,
   },
   inputAndroid: {
@@ -27,6 +29,8 @@ const pickerSelectStyles = {
     fontSize: 20,
   },
 };
+
+const currentYear = new Date().getFullYear();
 
 const FilterSelect: React.FC<FilterSelectProps> = React.memo(
   ({
@@ -62,7 +66,7 @@ const FilterSelect: React.FC<FilterSelectProps> = React.memo(
             {/* {label && <Picker.Item label={label} value="" />} */}
             {/* Other items */}
             {items.map((item, index) => (
-              <Picker.Item key={index} label={item.label} value={item.value} />
+              <Picker.Item key={index} label={item.key} value={item.value} />
             ))}
           </Picker>
         </View>
@@ -71,7 +75,7 @@ const FilterSelect: React.FC<FilterSelectProps> = React.memo(
       // iOS and other platforms use RNPickerSelect
       return (
         <View style={style}>
-          <RNPickerSelect
+          {/* <RNPickerSelect
             onValueChange={(value) => onValueChange(value, name)}
             items={items}
             value={value}
@@ -84,7 +88,14 @@ const FilterSelect: React.FC<FilterSelectProps> = React.memo(
               },
             }}
             useNativeAndroidPickerStyle={false}
-          />
+          /> */}
+          {/* <SelectList
+            setSelected={(value: number) => onValueChange(value, name)}
+            data={items}
+            // save="label"
+            search={false}
+            defaultOption={{key: currentYear.toString(), value: currentYear}}
+          /> */}
         </View>
       );
     }

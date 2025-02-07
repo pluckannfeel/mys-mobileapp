@@ -31,6 +31,7 @@ import { License } from "../../Document/types/Document";
 // import * as FileSystem from "expo-file-system";
 import * as Linking from "expo-linking";
 import * as Sharing from "expo-sharing";
+import Empty from "../../core/Components/Empty";
 
 type LicenseProps = {
   userInfo: UserInfo;
@@ -126,8 +127,11 @@ const shareFile = async (url: string) => {
 // };
 
 const LicenseItems = (licenses: License[]) => {
+  // const { t } = useTranslation();
+
   if (licenses.length === 0) {
-    return <Text style={styles.emptyState}>No licenses found</Text>;
+    // return <Text style={styles.emptyState}>記録なし</Text>;
+    return <Empty label="記録なし" />;
   }
 
   return licenses.map((license, index) => (

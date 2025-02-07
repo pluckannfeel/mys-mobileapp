@@ -129,7 +129,7 @@ const MainScreen = () => {
   const HomeScreenWrapper = () => {
     return (
       <HomeScreen
-      // userInfo={userInfo as UserInfo}
+      userInfo={userInfo as UserInfo}
       // recentPosts={recentPosts as Post[]}
       />
     );

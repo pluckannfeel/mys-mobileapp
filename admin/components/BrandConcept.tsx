@@ -13,16 +13,21 @@ import { Asset } from "expo-asset";
 import { useTranslation } from "react-i18next";
 
 import * as Linking from "expo-linking";
+import { AppNavigationProp } from "../../AppScreens";
+import { useNavigation } from "@react-navigation/native";
 
 const BrandConcept = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const navigation = useNavigation<AppNavigationProp>();
 
   useEffect(() => {
     const loadImage = async () => {
       try {
-        const asset = Asset.fromModule(require("../../assets/images/mys_logo.png"));
+        const asset = Asset.fromModule(
+          require("../../assets/images/mys_logo.png")
+        );
         await asset.downloadAsync();
         setImageUri(asset.localUri);
       } catch (error) {
@@ -75,11 +80,22 @@ const BrandConcept = () => {
             {t("admin.drawer.menu.brandConcept")}
           </Text>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => openFile("https://ews-bucket.s3.ap-northeast-1.amazonaws.com/archive/MYS%E3%83%96%E3%83%A9%E3%83%B3%E3%83%89%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88/mysbrandconcept.docx")} style={[styles.button, styles.blueButton]}>
+            {/* <TouchableOpacity
+              onPress={() => {}}
+              // https://ews-bucket.s3.ap-northeast-1.amazonaws.com/archive/MYS%E3%83%96%E3%83%A9%E3%83%B3%E3%83%89%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88/mysbrandconcept.docx
+              style={[styles.button, styles.blueButton]}
+            >
               <Ionicons name="document-text" size={20} color="#fff" />
               <Text style={styles.buttonText}>DOC</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => openFile('https://ews-bucket.s3.ap-northeast-1.amazonaws.com/archive/MYS%E3%83%96%E3%83%A9%E3%83%B3%E3%83%89%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88/mysbrandconcept.pdf')} style={[styles.button, styles.orangeButton]}>
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("PDFViewer", {
+                  url: "https://ews-bucket.s3.ap-northeast-1.amazonaws.com/archive/MYS%E3%83%96%E3%83%A9%E3%83%B3%E3%83%89%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88/mysbrandconcept.pdf",
+                })
+              }
+              style={[styles.button, styles.orangeButton]}
+            >
               <Ionicons name="document-text" size={20} color="#fff" />
               <Text style={styles.buttonText}>PDF</Text>
             </TouchableOpacity>
@@ -126,8 +142,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 10,
     overflow: "hidden",
-    alignSelf: 'flex-end',
-    maxWidth: '80%',
+    alignSelf: "flex-end",
+    maxWidth: "80%",
   },
   buttonContainer: {
     flexDirection: "row",

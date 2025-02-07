@@ -29,13 +29,14 @@ import PayslipItem from "../components/PayslipItem";
 import { getYear, parseISO } from "date-fns";
 import Empty from "../../core/Components/Empty";
 import Loader from "../../core/Components/Loader";
+import DropDownPicker from "react-native-dropdown-picker";
 
 type PayslipProps = {
   userInfo: UserInfo;
 };
 
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 6 }, (_, index) => currentYear - index);
+const years = Array.from({ length: 4 }, (_, index) => currentYear - index);
 
 const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
   const { t, i18n } = useTranslation();
@@ -44,6 +45,7 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [openPicker, setOpenPicker] = useState<boolean>(false);
 
   const { data: initialPayslips, isLoading } = usePayslips(
     userInfo?.staff_code as string
@@ -105,12 +107,10 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
     ]
   );
 
-  // Define the header component with the filter
-  const renderHeader = () => {
-    return (
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>{t("payslip.filter.filterByYear")}</Text>
-        <FilterSelect
+  {
+    /*  <View style={styles.inputContainer}>
+        {/* <Text style={styles.label}>{t("payslip.filter.filterByYear")}</Text>
+         <FilterSelect
           placeholderColor="#000"
           label={t("payslip.filter.filterByYear")}
           style={styles.input}
@@ -118,14 +118,48 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
           value={selectedYear}
           items={years.map((year) => ({
             value: year, // 'year' should be a number here
-            label: year.toString(), // Convert number to string for the label
+            key: year.toString(), // Convert number to string for the label
           }))}
           onValueChange={(value) => {
             // console.log(value);
             setSelectedYear(value); // Update the state
-          }}
+          }} 
         />
-      </View>
+        <SelectList
+          setSelected={(value: string) => setSelectedYear(parseInt(value))}
+          data={years.map((year) => ({
+            key: year.toString(),
+            value: year.toString(),
+          }))}
+          // defaultOption={{
+          //   key: currentYear.toString(),
+          //   value: currentYear.toString(),
+          // }}
+          search={false}
+        /> 
+      </View>*/
+  }
+
+  // Define the header component with the filter
+  const renderHeader = () => {
+    return (
+      <DropDownPicker
+        open={openPicker}
+        value={selectedYear} // Ensure this is a number
+        items={years.map((year) => ({
+          label: year.toString(), // Display label as a string
+          value: year, // Use the year as the value (this will be a number)
+        }))}
+        setOpen={setOpenPicker}
+        setValue={(value) => setSelectedYear(value)} // Set the selected year (which is a number)
+        containerStyle={{
+          // width: "80%",
+          // zIndex: 9999, // Ensures that the dropdown is on top of other elements
+          // position: "relative", // Ensures proper stacking of elements
+          // elevation: 10,
+        }}
+        placeholder="Select a year" // Optional placeholder
+      />
     );
   };
 
@@ -134,20 +168,43 @@ const PayslipScreen: React.FC<PayslipProps> = ({ userInfo }) => {
   ) : (
     <SafeAreaView style={[styles.container, { marginTop: headerHeight + 10 }]}>
       <StatusBar style="dark" />
-
-      {payslips.length > 0 ? (
-        <FlatList
-          data={payslips}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          keyExtractor={(item: Payslip) => item.id.toString()}
-          renderItem={({ item }) => <PayslipItem {...item} />}
-          ListHeaderComponent={renderHeader} // Add the header component here
-        />
-      ) : (
-        <Empty label={t("common.empty")} />
-      )}
+      <DropDownPicker
+        open={openPicker}
+        value={selectedYear} // Ensure this is a number
+        items={years.map((year) => ({
+          label: year.toString(), // Display label as a string
+          value: year, // Use the year as the value (this will be a number)
+        }))}
+        setOpen={setOpenPicker}
+        setValue={(value) => setSelectedYear(value)} // Set the selected year (which is a number)
+        // disabledStyle={{
+        //   opacity: 0.5
+        // }}
+        // searchable={true}
+        containerStyle={{
+          width: "30%",
+          alignSelf: "flex-end",
+          paddingRight: 10,
+          zIndex: 9999, // Ensures that the dropdown is on top of other elements
+          // position: "relative", // Ensures proper stacking of elements
+          elevation: 10,
+        }}
+        style={{
+          padding: 0,
+          margin: 0,
+        }}
+        placeholder="Select a year" // Optional placeholder
+      />
+      <FlatList
+        data={payslips}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        keyExtractor={(item: Payslip) => item.id.toString()}
+        renderItem={({ item }) => <PayslipItem {...item} />}
+        ListEmptyComponent={<Empty label={t("common.empty")} />}
+        // ListHeaderComponent={renderHeader} // Add the header component here
+      />
     </SafeAreaView>
   );
 };
@@ -181,20 +238,20 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    justifyContent: "flex-end", // Align to the right side
+    justifyContent: "flex-start", // Align to the right side
     alignItems: "center",
-    paddingRight: 20, // Add padding to the right side
+    // paddingRight: 20, // Add padding to the right side
     width: "100%",
   },
   input: {
-    minWidth: 100, // Minimum width to show the value, adjust as needed
+    minWidth: 150, // Minimum width to show the value, adjust as needed
     flexDirection: "row", // Align value horizontally
     textAlignVertical: "center", // Vertically center value
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
     fontSize: 20,
-    backgroundColor: "rgba(0,0,0,0.05)",
-    borderRadius: 15,
+    // backgroundColor: "rgba(0,0,0,0.05)",
+    // borderRadius: 15,
     color: "black",
     textAlign: "center",
     // marginRight: 10, // Add space between label and dropdown
