@@ -4,8 +4,9 @@ export interface LeaveRequest {
   // staff?: {} // object
   start_date: Date;
   end_date: Date;
-  type: string;
-  number_of_days: number;
+  leave_type?: string;
+  number_of_days?: number;
   status?: string;
-  details: string;
+  details?: string;
+  paid_leave_dates?: string;
 }

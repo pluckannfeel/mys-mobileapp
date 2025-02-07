@@ -99,6 +99,7 @@ const QuickLinks: React.FC = () => {
   return (
     <View>
       <Text style={styles.header}>{t("admin.drawer.menu.quickLinks")}</Text>
+      <View style={styles.divider} />
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -133,9 +134,16 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   header: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    paddingVertical: 20, // Adds space above and below the header
+    paddingVertical: 10, // Adds space above and below the header
     paddingLeft: 16, // Align text to start with the content of the list
+    // add border
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#cccccc",
+    // marginHorizontal: 16,
+    marginBottom: 4,
   },
 });

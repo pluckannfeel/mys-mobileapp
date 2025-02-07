@@ -163,23 +163,19 @@ const Login = () => {
           />
         </View>
 
-        {isBiometricSupported && (
-          // <Button
-          //   // title="Login with Biometrics"
-
-          //   onPress={handleBiometricAuth}
-          // />
-          <TouchableOpacity
-            style={styles.centerRow}
-            onPress={handleBiometricAuth}
-          >
-            <MaterialCommunityIcons
-              name="face-recognition"
-              size={45}
-              color="gray"
-            />
-          </TouchableOpacity>
-        )}
+        {isBiometricSupported &&
+          (Platform.OS === "ios" ? (
+            <TouchableOpacity
+              style={styles.centerRow}
+              onPress={handleBiometricAuth}
+            >
+              <MaterialCommunityIcons
+                name="face-recognition"
+                size={45}
+                color="gray"
+              />
+            </TouchableOpacity>
+          ) : null)}
       </View>
       {/* </KeyboardAvoidingView> */}
     </MainView>

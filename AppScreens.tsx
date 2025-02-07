@@ -26,11 +26,14 @@ import {
   NotificationParams,
 } from "./Notifications/types/Notification";
 import { usePushNotifications } from "./Notifications/hooks/usePushNotifications";
-import { Alert } from "react-native";
+import { Alert, TouchableOpacity, StyleSheet } from "react-native";
 import NotificationSettingsScreen from "./Settings/Components/NotificationSettings";
 import PostDetailsScreen from "./admin/components/PostDetails";
 import MainScreen from "./admin/screens/MainDrawer";
 import Loader from "./core/Components/Loader";
+import PDFViewerScreen from "./core/Components/PDFViewer";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { theme } from "./core/theme/theme";
 
 // Define the root stack params
 export type RootStackParamList = {
@@ -55,6 +58,7 @@ export type PrivateStackParamList = {
   EmergencyContact: undefined;
   News: undefined;
   PostDetails: undefined;
+  PDFViewer: { url: string };
   // ... other private screens ...
 };
 
@@ -145,6 +149,27 @@ const PrivateStackScreen = () => {
           headerTitle: "",
         }}
       />
+      <PrivateStack.Screen
+        name="PDFViewer"
+        component={PDFViewerScreen}
+        options={{
+          headerTransparent: true,
+          // headerTitle: "MYSブランドコンセプトテキストバージョン",
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(StackActions.pop())}
+              style={styles.headerButton}
+            >
+              <MaterialCommunityIcons
+                name="arrow-left"
+                size={30}
+                color={theme.colors.primary}
+              />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       {/* <PrivateStack.Screen name="Shift" component={ShiftScreen} /> */}
 
       {/* ... other private screens ... */}
@@ -194,3 +219,10 @@ const AppScreens = () => {
 };
 
 export default AppScreens;
+
+const styles = StyleSheet.create({
+  headerButton: {
+    marginLeft: 10,
+    marginTop: 10,
+  },
+});

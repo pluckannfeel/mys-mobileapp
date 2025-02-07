@@ -43,6 +43,9 @@ import { useGetRecentPosts } from "../hooks/usGetRecentPosts";
 import { Post } from "../types/post";
 import Loader from "../../core/Components/Loader";
 import { useAuth } from "../../auth/contexts/AuthProvider";
+import AppUpdateChecker from "../../core/Components/AppUpdateChecker";
+import TotalWorkHours from "../../core/Components/TotalWorkHours";
+import { useTotalHours } from "../../core/hooks/useTotalHours";
 
 const Tab = createBottomTabNavigator();
 
@@ -53,22 +56,25 @@ type IconProps =
   | React.ComponentProps<typeof Fontisto>;
 
 interface HomeProps {
-  //   userInfo?: UserInfo;
+  userInfo?: UserInfo;
   //   isUserDataLoading: boolean;
   //   recentPosts?: Post[];
   //   isRecentPostsLoading: boolean;
 }
 
-const HomeScreen: React.FC<HomeProps> = (
-  {
-    //   userInfo,
-    //   recentPosts,
-    //   isUserDataLoading,
-    //   isRecentPostsLoading,
-  }
-) => {
+const HomeScreen: React.FC<HomeProps> = ({
+  userInfo,
+  //   recentPosts,
+  //   isUserDataLoading,
+  //   isRecentPostsLoading,
+}) => {
   const { t } = useTranslation();
   const { recentPosts, isRecentPostsLoading, refetchRecentPosts } = useAuth();
+  const {
+    data: totalWorkHours,
+    isLoading: isWorkHoursLoading,
+    refetch: workHoursRefetch,
+  } = useTotalHours(userInfo?.staff_code as string);
   //   const navigation = useNavigation<AppNavigationProp>();
   //   useLayoutEffect(() => {
   //     navigation.setOptions({
@@ -92,6 +98,13 @@ const HomeScreen: React.FC<HomeProps> = (
       <SafeAreaView style={styles.safeArea}>
         <ScrollView>
           <QuickLinks />
+
+          {/* staff total work hours */}
+          <TotalWorkHours
+            data={totalWorkHours ?? ""}
+            loading={isWorkHoursLoading}
+            refetch={workHoursRefetch}
+          />
 
           <LatestNewsWidget
             data={recentPosts ?? []}
@@ -136,6 +149,9 @@ const styles = StyleSheet.create({
     elevation: 10, // For Android shadow
     paddingTop: 10,
     paddingHorizontal: 20,
+    // hairdline with top border
+    borderTopWidth: 1,
+
     // Removed paddingBottom to reduce space at the bottom
   },
   quickLinksContainer: {
@@ -201,13 +217,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   titlewDivider: {
-    fontSize: 22,
+    fontSize: 24,
     // fontVariant
     fontWeight: "bold",
     paddingHorizontal: 16,
     // flexDirection: "row",
     // alignItems: "center",
     // justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 16,
   },
 });

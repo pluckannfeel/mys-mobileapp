@@ -4,14 +4,28 @@
     "cancel": "キャンセル",
     "confirm": "確認",
     "confirmation": "確認",
+    "close": "閉じる",
+    "date": "日付",
+    "days": [
+      "日曜日",
+      "月曜日",
+      "火曜日",
+      "水曜日",
+      "木曜日",
+      "金曜日",
+      "土曜日"
+    ],
     "delete": "削除",
+    "dismiss": "閉じる",
     "edit": "編集",
     "view": "表示",
     "read": "閲覧",
     "download": "ダウンロード",
     "upload": "アップロード",
+    "updateNow": "今すぐ更新",
     "import": "CSVインポート",
     "confirmImportMsg": "{{fileName}} をインポートしてもよろしいですか？",
+    "search": "検索",
     "select": "選択",
     "save": "保存",
     "add": "追加",
@@ -86,6 +100,10 @@
         "seeAll": "すべての通知を見る"
       }
     }
+  },
+  "home": {
+    "totalServiceHours": "就労時間合計",
+    "hours": "時間"
   },
   "menu": {
     "shiftReport": "業務日誌",
@@ -241,6 +259,16 @@
     "empty": "次日のシフトはありません。"
   },
   "leaveRequest": {
+    "actions": {
+      "edit": "編集",
+      "delete": "削除"
+    },
+    "alerts": {
+      "delete": {
+        "title": "削除",
+        "message": "この休暇申請を削除してもよろしいですか？"
+      }
+    },
     "screen": {
       "header": {
         "date": "日付",
@@ -266,7 +294,7 @@
       "label": "休暇申請",
       "note": "休暇の申請は一度に一つだけ提出できます。別の申請をする前に、承認をお待ちください。",
       "leave_type": {
-        "label": "休暇種類",
+        "label": "有給を使いますか？",
         "options": {
           "paid": "有給する",
           "unpaid": "有給しない"
@@ -287,11 +315,19 @@
       },
       "error": {
         "required": "必須項目です",
-        "invalidDate": "開始日は終了日より前に設定してください"
-      }
+        "invalidDate": "開始日は終了日より前に設定してください",
+        "selectMaximumExceeded": "選択できる日付は最大10件までです。新しい日付を追加するには、既存の日付を解除してください。"
+      },
+      "selectDates": {
+        "label": "日付を選択",
+        "note": "有給休暇を取得したい日を選択してください \n(最大10件)"
+      },
+      "limit": "最大10件"
     },
     "notifications": {
       "addSuccessLeaveRequest": "休日／有給申請が提出されました",
+      "editSuccessLeaveRequest": "休日／有給申請が更新されました",
+      "deleteSuccessLeaveRequest": "休日／有給申請が削除されました",
       "errorLeaveRequest": "休日／有給申請が提出されませんでした",
       "existingLeaveRequest": "休日／有給申請が既に存在します",
       "updateLeaveRequest": "休日／有給申請が",
@@ -556,5 +592,9 @@
       "newPayslip": "新給料明細があります",
       "newWithholdingTax": "新源泉徴収票があります"
     }
+  },
+  "version": {
+    "updateAvailable": "新しいバージョン",
+    "message": "新しいバージョンが利用可能です。今すぐ更新してください。"
   }
 }

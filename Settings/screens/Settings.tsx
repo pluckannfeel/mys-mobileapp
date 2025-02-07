@@ -6,12 +6,14 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import { AppNavigationProp } from "../../AppScreens";
 import { useTranslation } from "react-i18next";
 import { theme } from "../../core/theme/theme";
+import { HEIGHT } from "../../core/constants/dimensions";
 
 type SettingsOptionProps = {
   title: string;
@@ -103,7 +105,11 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ onLogout }) => {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    // backgroundColor: "#fff",
+    marginTop: Platform.select({
+      ios: undefined, // Example for iOS
+      android: HEIGHT * 0.1, // Example for Android
+      default: 0, // Fallback for other platforms
+    }),
   },
   section: {
     // marginTop: 35,

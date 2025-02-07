@@ -819,7 +819,7 @@ const Profileform: React.FC<ProfileProps> = ({
             <View style={styles.inputContainer}>
               <TextInput
                 onChangeText={formik.handleChange(
-                  "residence_card_details.residence_card_number"
+                  "residence_card_details.number"
                 )}
                 // onChange={(e) => {
                 //   // convert to object residence_card_details

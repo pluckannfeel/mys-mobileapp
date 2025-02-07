@@ -43,6 +43,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import RNRestart from "react-native-restart";
 import { MenuProvider } from "react-native-popup-menu";
 import * as SecureStore from "expo-secure-store";
+import AppUpdateChecker from "./core/Components/AppUpdateChecker";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -141,6 +142,9 @@ const App = () => {
                           >
                             <NavigationContainer>
                               <AppScreens />
+
+                              {/* App Update Checker Modal */}
+                              <AppUpdateChecker />
                             </NavigationContainer>
                           </KeyboardAvoidingView>
                         </SelectedShiftProvider>

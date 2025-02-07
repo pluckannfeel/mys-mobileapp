@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "react-query";
-import { updateOne } from "../../core/utils/crudUtils";
 import { Profile } from "../types/profile";
 import { axiosInstance } from "../../api/server";
 import * as FileSystem from "expo-file-system";

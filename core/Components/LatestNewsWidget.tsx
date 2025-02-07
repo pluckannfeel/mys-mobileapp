@@ -104,11 +104,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 16,
     paddingRight: 8,
   },
   header: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
   },
   card: {

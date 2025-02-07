@@ -77,6 +77,7 @@ const PayslipItem = (payslip: Payslip) => {
         <Text style={styles.headerText}>{`${year}${
           i18n.language === "ja" ? "年" : ""
         } ${monthName}`}</Text>
+        {payslip.details && <Text style={styles.detailsText}>{`備考: ${payslip.details}`}</Text>}
         <Text>{`${t("payslip.item.netSalary")}: ¥ ${payslip.net_salary}`}</Text>
         <Text>{`${t("payslip.item.totalDeduction")}: ¥ ${
           payslip.total_deduction
@@ -90,13 +91,13 @@ const PayslipItem = (payslip: Payslip) => {
           onPress={() => handleView(payslip.file_url as string)}
           style={styles.iconButton}
         >
-          <AntDesign name="eye" size={26} color="black" />
+          <AntDesign name="eye" size={26} color="#9A2F7C" />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => handleShare(payslip.file_url as string)}
           style={styles.iconButton}
         >
-          <FontAwesome name="share" size={24} color="black" />
+          <FontAwesome name="share" size={24} color="#9A2F7C" />
         </TouchableOpacity>
       </View>
     </View>
@@ -129,11 +130,18 @@ const styles = StyleSheet.create({
     // marginVertical: 10,  // Space between icons
     padding: 10,
     // backgroundColor: "red",
+    // color: "#9A2F7C",
   },
   headerText: {
-    marginBottom: 10,
+    marginBottom: 5,
     fontSize: 18,
     fontWeight: "bold",
+    color: "#9A2F7C",
   },
+  detailsText: {
+    marginBottom: 10,
+    
+    fontSize: 16,
+  }
   // Additional styles...
 });
